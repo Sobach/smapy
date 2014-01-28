@@ -1,9 +1,11 @@
-# For Atom Feed
-domain: sobach.github.io
-author: Alexander Tolmach
-email: tolmach@me.com
-title: smapy docs
-
+title:        smapy docs
+tagline:      'social media anatomist for Python'
+description:  'A comprehensive tool for social media researchers'
+author:
+  name:       'Alexander Tolmach'
+  email:      'tolmach@me.com'
+markdown:     rdiscount
+permalink:    pretty
+pygments:     true
 permalink: /:title
-
 encoding: UTF-8
