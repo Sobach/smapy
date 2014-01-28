@@ -3,12 +3,12 @@ markdown:         redcarpet
 pygments:         true
 
 # Permalinks
-permalink:        /smapy/:title
+permalink:        pretty
 
 # Setup
 title:            smapy
 tagline:          'social media anatomist'
-description:      'Socail media anatomist for Python - Documentation'
+description:      'Socail media anatomist for Python for Documentation'
 url:              http://sobach.github.io/smapy/
 
 author:
