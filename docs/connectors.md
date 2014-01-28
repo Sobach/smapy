@@ -13,39 +13,17 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
 ## Aviable connectors
 
-<table>
-  <tr>
-    <th>Time rates*</th><th>persons</th><th>statuses</th><th>comments</th>
-  </tr>
-  <tr>
-    <td>[Facebook connector](/smapy/docs/facebook_connector/)</td><td>50</td><td>750</td><td>2500</td>
-  </tr>
-  <tr>
-    <td>[Twitter connector](/smapy/docs/twitter_connector/)</td><td>1000</td><td>1000</td><td>1000</td>
-  </tr>
-  <tr>
-    <td>[GooglePlus connector](/smapy/docs/googleplus_connector/)</td><td>100</td><td>1000</td><td>2000</td>
-  </tr>
-  <tr>
-    <td>[YouTube connector](/smapy/docs/youtube_connector/)</td><td>50</td><td>400</td><td>700</td>
-  </tr>
-  <tr>
-    <td>[Instagram connector](/smapy/docs/instagram_connector/)</td><td>100</td><td>500</td><td>2000</td>
-  </tr>
-  <tr>
-    <td>[LiveJournal connector](/smapy/docs/livejournal_connector/)</td><td>30</td><td>10</td><td>40</td>
-  </tr>
-  <tr>
-    <td>[VKontakte connector](/smapy/docs/vkontakte_connector/)</td><td>50</td><td>3000</td><td>5000</td>
-  </tr>
-</table>
+| Time rates*                                                 | .profiles() | .statuses() | .comments() |
+|-------------------------------------------------------------|-------------|-------------|-------------|
+| [Facebook connector](/smapy/docs/facebook_connector/)       |  50         | 750         |  2500       |
+| [Twitter connector](/smapy/docs/twitter_connector/)         |  1000       | 1000        |  1000       |
+| [GooglePlus connector](/smapy/docs/googleplus_connector/)   |  100        | 1000        |  2000       |
+| [YouTube connector](/smapy/docs/youtube_connector/)         |  50         | 400         |  700        |
+| [Instagram connector](/smapy/docs/instagram_connector/)     |  100        | 500         |  2000       |
+| [LiveJournal connector](/smapy/docs/livejournal_connector/) |  30         | 10          |  40         |
+| [VKontakte connector](/smapy/docs/vkontakte_connector/)     |  50         | 3000        |  5000       |
 
 \* Time costs evaluated in average number of collected instances per 1 minute.
-
-| Time rates | profiles | statuses | comments |
-|------------|----------|----------|----------|
-|      [safsad](/smapy/)|  adfsad  |      asdf|  dfsdfad |
-|      safsad|  adfsad  |      asdf|  dfsdfad |
 
 ## Properties
 
