@@ -55,11 +55,11 @@ Public methods:
 
     Prints all your KeyChain object to stdout in a pretty form.
 
-* **dump**(*key_dir = os.path.dirname(\__file\__)*)
+* **dump**(*key_dir = os.path.dirname(__file__)*)
 
     This method stores KeyChain object on hard drive. It uses `pickle` module to create dump and writes it on disk. File name - is a hash-string, obtained from current date and KeyChain tokens. You can specify folder name as `key_dir` parameter. Otherwise KeyChain would be dumped to module's directory.
     
-* **available_dumps**(*key_dir = os.path.dirname(\__file\__)*)
+* **available_dumps**(*key_dir = os.path.dirname(\_\_file\_\_)*)
 
     This method checks specified directory and loads all saved KeyChain dumps from it. Method returns dictionary object with three items:
     

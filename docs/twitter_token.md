@@ -5,7 +5,7 @@ title: Twitter access token
 
 # Twitter access token
 
-How-to: recieving access token for Twitter(_www.twitter.com_).
+How-to: recieving access token for Twitter ([www.twitter.com](http://www.twitter.com)).
 
 ## Registering application
 
@@ -25,9 +25,9 @@ How-to: recieving access token for Twitter(_www.twitter.com_).
 
 5. It may take up to 1 minute. So refresh page after some time. If everything was fine, new fields will occur in "You access token" section: access token, access token secret and access level ("read-only").
 
-## Adding token to [[KeyChain]]
+## Adding token to [KeyChain](/smapy/docs/keychain/)
 
-To make requests through [[Twitter connector]] you need "Consumer key", "Consumer secret", "Access token", and "Access token secret". All displayed on app detailes page. In KeyChain object these credentials are stored in a dictionary-like form. 
+To make requests through [Twitter connector](/smapy/docs/twitter_connector/) you need "Consumer key", "Consumer secret", "Access token", and "Access token secret". All displayed on app detailes page. In KeyChain object these credentials are stored in a dictionary-like form. 
 
 Adding Twitter token to KeyChain:
 
@@ -46,7 +46,7 @@ k.dump()
 
 ## Using token
 
-After enetering and storing token in KeyChain it can be used to gather data through [[Twitter connector]]:
+After enetering and storing token in KeyChain it can be used to gather data through [Twitter connector](/smapy/docs/twitter_connector/):
 
 ```python
 >>> from smapy.network_connectors.addons import KeyChain

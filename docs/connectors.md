@@ -18,25 +18,25 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
     <th>Time rates*</th><th>persons</th><th>statuses</th><th>comments</th>
   </tr>
   <tr>
-    <td>[[Facebook connector]]</td><td>50</td><td>750</td><td>2500</td>
+    <td>[Facebook connector](/smapy/docs/facebook_connector/)</td><td>50</td><td>750</td><td>2500</td>
   </tr>
   <tr>
-    <td>[[Twitter connector]]</td><td>1000</td><td>1000</td><td>1000</td>
+    <td>[Twitter connector](/smapy/docs/twitter_connector/)</td><td>1000</td><td>1000</td><td>1000</td>
   </tr>
   <tr>
-    <td>[[GooglePlus connector]]</td><td>100</td><td>1000</td><td>2000</td>
+    <td>[GooglePlus connector](/smapy/docs/googleplus_connector/)</td><td>100</td><td>1000</td><td>2000</td>
   </tr>
   <tr>
-    <td>[[YouTube connector]]</td><td>50</td><td>400</td><td>700</td>
+    <td>[YouTube connector](/smapy/docs/youtube_connector/)</td><td>50</td><td>400</td><td>700</td>
   </tr>
   <tr>
-    <td>[[Instagram connector]]</td><td>100</td><td>500</td><td>2000</td>
+    <td>[Instagram connector](/smapy/docs/instagram_connector/)</td><td>100</td><td>500</td><td>2000</td>
   </tr>
   <tr>
-    <td>[[LiveJournal connector]]</td><td>30</td><td>10</td><td>40</td>
+    <td>[LiveJournal connector](/smapy/docs/livejournal_connector/)</td><td>30</td><td>10</td><td>40</td>
   </tr>
   <tr>
-    <td>[[VKontakte connector]]</td><td>50</td><td>3000</td><td>5000</td>
+    <td>[VKontakte connector](/smapy/docs/vkontakte_connector/)</td><td>50</td><td>3000</td><td>5000</td>
   </tr>
 </table>
 
@@ -70,17 +70,17 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
   Access token to make requests to network's API. Not required for some networks (i.e. Livejournal). Read more about how to get tokens to different networks:
   
-  * [[Facebook token]]
+  * [Facebook token](/smapy/docs/facebook_token/)
 
-  * [[Twitter token]]
+  * [Twitter token](/smapy/docs/twitter_token/)
 
-  * [[Google token]]
+  * [Google token](/smapy/docs/google_token/)
 
-  * [[Instagram token]]
+  * [Instagram token](/smapy/docs/instagram_token/)
 
-  * [[VKontakte token]]
+  * [VKontakte token](/smapy/docs/vkontakte_token/)
 
-  * [[Odnoklassniki token]]
+  * [Odnoklassniki token](/smapy/docs/odnoklassniki_token/)
 
 * **start_date**
 
