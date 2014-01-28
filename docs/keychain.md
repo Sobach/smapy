@@ -71,11 +71,11 @@ Public methods:
 
     Used to review all available dumps to choose required before loading.
 
-* **load**(*hashstr, key_dir = os.path.dirname(\__file\__)*)
+* **load**(*hashstr, key_dir = os.path.dirname( \__file\__ )*)
 
     Method loads dump with provided hash into the KeyChain object. Specify key dumps folder in the parameters. If dump was loaded - return True, otherwise returns False.
 
-* **load_last**(*key_dir = os.path.dirname(\__file\__)*)
+* **load_last**(*key_dir = os.path.dirname(_\_file\__)*)
 
     Combined `available_dumps()` and `load()` methods. Scans all available dumps in the folder, and then loads the newest. Returns True, if dump was loaded. Otherwise - False.
 
