@@ -42,6 +42,11 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
 \* Time costs evaluated in average number of collected instances per 1 minute.
 
+| Time rates | profiles | statuses | comments |
+|------------|----------|----------|----------|
+|      safsad|  adfsad  |      asdf|  dfsdfad |
+|      safsad|  adfsad  |      asdf|  dfsdfad |
+
 ## Properties
 
 * **accounts**
