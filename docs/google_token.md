@@ -1,8 +1,11 @@
 ---
-title: Document Center
+layout: default
+title: Google token
 ---
 
-How-to: recieving access token for Google products: Google+ (http://plus.google.com) and YouTube (http://www.youtube.com).
+# Google access token
+
+How-to: recieving access token for Google products: Google+ ([http://plus.google.com](http://plus.google.com)) and YouTube ([http://www.youtube.com](http://www.youtube.com)).
 
 ## Registering application
 
@@ -10,23 +13,23 @@ How-to: recieving access token for Google products: Google+ (http://plus.google.
 
 2. Create new project. Required fields are already filled. But Google may ask you to verify your phone number.
 
- ![Create project button](https://dl.dropboxusercontent.com/u/81437006/smapy/token_go_1.PNG)
+ ![Create project button](/smapy/img/token_go_1.png)
 
- ![Create project widget](https://dl.dropboxusercontent.com/u/81437006/smapy/token_go_2.PNG)
+ ![Create project widget](/smapy/img/token_go_2.png)
 
 3. Go to "APIs" menu section and enable "Google+ API" and "YouTube Data API v3".
 
- ![App settings page](https://dl.dropboxusercontent.com/u/81437006/smapy/token_go_3.PNG)
+ ![App settings page](/smapy/img/token_go_3.png)
 
 4. Now go to "Registered Apps" tab and press "Register app". Next step - type app name and check "Web Application" type.
 
 5. Now you can choose authorisation type. For our purposes "Server Key" is quite enough. Open "Server Key" section and you will get your API key (numeric and characters string).
 
- ![Auth types](https://dl.dropboxusercontent.com/u/81437006/smapy/token_go_4.PNG)
+ ![Auth types](/smapy/img/token_go_4.png)
 
-## Adding token to [[KeyChain]]
+## Adding token to [KeyChain](/smapy/docs/keychain/)
 
-Only API key string is needed to make requests through [[YouTube connector]] and [[GooglePlus connector]]. So just save it to KeyChain:
+Only API key string is needed to make requests through [YouTube connector](/smapy/docs/youtube_connector) and [GooglePlus connector](/smapy/docs/googleplus_connector). So just save it to KeyChain:
 
 ```python
 from smapy.network_connectors.addons import KeyChain
@@ -39,7 +42,7 @@ You can assign token either to `gp` KeyChain() slot, or `yt`. It doesn't matter:
 
 ## Using token
 
-After enetering and storing token in KeyChain it can be used to gather data through [[GooglePlus connector]] or [[YouTube connector]]:
+After enetering and storing token in KeyChain it can be used to gather data through [GooglePlus connector](/smapy/docs/googleplus_connector) or [YouTube connector](/smapy/docs/youtube_connector):
 
 ```python
 >>> from smapy.network_connectors.addons import KeyChain

@@ -5,7 +5,7 @@ title: Twitter connector
 
 # Twitter connector
 
-Connector to Twitter micro-blog platform (http://www.twitter.com).
+Connector to Twitter micro-blog platform ([http://www.twitter.com](http://www.twitter.com)).
 
 ## Time costs:
 

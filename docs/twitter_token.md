@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Twitter access token
+title: Twitter token
 ---
 
 # Twitter access token
 
-How-to: recieving access token for Twitter ([www.twitter.com](http://www.twitter.com)).
+How-to: recieving access token for Twitter ([http://www.twitter.com](http://www.twitter.com)).
 
 ## Registering application
 
@@ -15,13 +15,13 @@ How-to: recieving access token for Twitter ([www.twitter.com](http://www.twitter
 
 3. Fill name, description and website fileds (website field required, but wouldn't be used, so enter whatever you want). Check "Agree with developers rules", enter captcha, and submit the form.
 
- ![Creating app form-1](https://dl.dropboxusercontent.com/u/81437006/smapy/token_tw_1.PNG)
+ ![Creating app form-1](/smapy/img/token_tw_1.png)
  
- ![Creating app form-2](https://dl.dropboxusercontent.com/u/81437006/smapy/token_tw_2.PNG)
+ ![Creating app form-2](/smapy/img/token_tw_2.png)
 
 4. You will be redirected to the "detailes" app page. In the bottom there is "You access token" section and "Create my access token" button. 
 
- ![You access token section](https://dl.dropboxusercontent.com/u/81437006/smapy/token_tw_3.PNG)
+ ![You access token section](/smapy/img/token_tw_3.png)
 
 5. It may take up to 1 minute. So refresh page after some time. If everything was fine, new fields will occur in "You access token" section: access token, access token secret and access level ("read-only").
 

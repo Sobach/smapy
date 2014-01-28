@@ -1,8 +1,11 @@
 ---
-title: Document Center
+layout: default
+title: Instagram token
 ---
 
-How-to: recieving access token for Instagram (www.instagram.com).
+# Instagram access token
+
+How-to: recieving access token for Instagram ([http://www.instagram.com](http://www.instagram.com)).
 
 ## Registering application
 
@@ -14,13 +17,13 @@ How-to: recieving access token for Instagram (www.instagram.com).
 
 4. After application creation go to ["managers page"](http://instagram.com/developer/clients/manage/) and copy Client ID and Redirect URI.
 
-5. Substitute them into this URL: https://instagram.com/oauth/authorize/?client_id=Client_ID&redirect_uri=Redirect_URI&response_type=token and open it in your browser.
+5. Substitute them into this URL: `https://instagram.com/oauth/authorize/?client_id=[Client_ID]&redirect_uri=[Redirect_URI]&response_type=token` and open it in your browser.
 
 6. You will be asked to authorize your app and after this you will be redirected to the page, specified earlier. In browser address bar - in the end of your redirect address "access_token" parameter would be written. As for now, this token doesn't expire, so you need to do this task only once. 
 
-## Adding token to [[KeyChain]]
+## Adding token to [KeyChain](/smapy/docs/keychain/)
 
-Only access_token string is needed to make requests through [[Instagram connector]]. So just save it to KeyChain:
+Only access_token string is needed to make requests through [Instagram connector](/smapy/docs/instagram_connector/). So just save it to KeyChain:
 
 ```python
 from smapy.network_connectors.addons import KeyChain
@@ -31,7 +34,7 @@ k.dump()
 
 ## Using token
 
-After enetering and storing token in KeyChain it can be used to gather data through [[Facebook connector]]:
+After enetering and storing token in KeyChain it can be used to gather data through [Instagram connector](/smapy/docs/instagram_connector/):
 
 ```python
 >>> from smapy.network_connectors.addons import KeyChain

@@ -59,7 +59,7 @@ Public methods:
 
     This method stores KeyChain object on hard drive. It uses `pickle` module to create dump and writes it on disk. File name - is a hash-string, obtained from current date and KeyChain tokens. You can specify folder name as `key_dir` parameter. Otherwise KeyChain would be dumped to module's directory.
     
-* **available_dumps**(*key_dir = os.path.dirname(\_\_file\_\_)*)
+* **available_dumps**(*key_dir = os.path.dirname(&#95;&#95;file&#95;&#95;)*)
 
     This method checks specified directory and loads all saved KeyChain dumps from it. Method returns dictionary object with three items:
     
@@ -71,11 +71,11 @@ Public methods:
 
     Used to review all available dumps to choose required before loading.
 
-* **load**(*hashstr, key_dir = os.path.dirname( \__file\__ )*)
+* **load**(*hashstr, key_dir = os.path.dirname(&#95;&#95;file&#95;&#95;)*)
 
     Method loads dump with provided hash into the KeyChain object. Specify key dumps folder in the parameters. If dump was loaded - return True, otherwise returns False.
 
-* **load_last**(*key_dir = os.path.dirname(_\_file\__)*)
+* **load_last**(*key_dir = os.path.dirname(&#95;&#95;file&#95;&#95;)*)
 
     Combined `available_dumps()` and `load()` methods. Scans all available dumps in the folder, and then loads the newest. Returns True, if dump was loaded. Otherwise - False.
 

@@ -1,8 +1,11 @@
 ---
-title: Document Center
+layout: default
+title: VKontakte token
 ---
 
-How-to: recieving access token for VK (www.vk.com).
+# VKontakte access token
+
+How-to: recieving access token for VK social network ([http://www.vk.com](http://www.vk.com)).
 
 ## Registering application
 
@@ -10,15 +13,15 @@ How-to: recieving access token for VK (www.vk.com).
 
 2. Press "Creeate an Application" button. Name it and check "Standalone application" type.
 
-![Create app button](https://dl.dropboxusercontent.com/u/81437006/smapy/token_vk_1.PNG)
+![Create app button](/smapy/img/token_vk_1.png)
 
 3. Now you need to verify your regictration through SMS.
 
 4. After verification go to application "Settings" tab and look for Application ID and Secure key.
 
-![App tab selector](https://dl.dropboxusercontent.com/u/81437006/smapy/token_vk_2.PNG)
+![App tab selector](/smapy/img/token_vk_2.png)
 
-## Adding token to [[KeyChain]]
+## Adding token to [KeyChain](/smapy/docs/keychain/)
 
 If you got valuable access token by yourself - you can just add it to `vk` slot of KeyChain().
 
@@ -44,7 +47,7 @@ token = {
 
 ## Using token
 
-After enetering and storing token in KeyChain it can be used to gather data through [[VKontakte connector]]:
+After enetering and storing token in KeyChain it can be used to gather data through [VKontakte connector](/smapy/docs/vkontakte_connector/):
 
 ```python
 >>> from smapy.network_connectors.addons import KeyChain
