@@ -5,6 +5,8 @@ pygments:         true
 # Permalinks
 permalink:        pretty
 
+baseurl: http://sobach.github.io/smapy/
+
 # Setup
 title:            Hyde
 tagline:          'A Jekyll theme'
