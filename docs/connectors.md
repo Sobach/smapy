@@ -44,7 +44,7 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
 | Time rates | profiles | statuses | comments |
 |------------|----------|----------|----------|
-|      safsad|  adfsad  |      asdf|  dfsdfad |
+|      [safsad](/smapy/)|  adfsad  |      asdf|  dfsdfad |
 |      safsad|  adfsad  |      asdf|  dfsdfad |
 
 ## Properties
