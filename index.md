@@ -1,9 +1,7 @@
 ---
 layout: default
-title: Home / smapy
+title: Home
 ---
-
-# SMAPY
 
 Social media anatomist for Python (smapy) is a comprehensive tool for social media researchers: sociologists, culturologists, anthropologists, etc. It provides unified interfaces to number of popular social networks and blog platforms (Connectors); collection of structured data instances (Models); and several templates for models representation (Exporters). These three blocks correspond to appropriate data-collecting stages:
 

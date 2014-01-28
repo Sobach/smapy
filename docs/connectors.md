@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Connectors / smapy
+title: Connectors
 ---
 
 # Connectors

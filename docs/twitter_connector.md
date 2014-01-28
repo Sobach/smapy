@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Twitter connector / smapy
+title: Twitter connector
 ---
 
 # Twitter connector
