@@ -6,14 +6,14 @@ pygments:         true
 permalink:        pretty
 
 # Setup
-title:            Hyde
-tagline:          'A Jekyll theme'
-description:      'A brazen two-column <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that pairs a prominent sidebar with uncomplicated content. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
-url:              http://hyde.getpoole.com
+title:            smapy.docs
+tagline:          'social media anatomist'
+description:      'Socail media anatomist for Python / Documentation'
+url:              http://sobach.github.io/smapy/
 
 author:
-  name:           'Mark Otto'
-  url:            https://twitter.com/mdo
+  name:           'Alexander Tolmach'
+  url:            http://www.facebook.com/atolmach
 
 paginate:         5
 
@@ -21,4 +21,4 @@ paginate:         5
 version:          2.0.0
 
 github:
-  repo:           https://github.com/poole/hyde
+  repo:           http://github.com/Sobach/smapy/

@@ -52,4 +52,4 @@ token = {
         }
 ```
 
-Read how to get access token: [Twitter token](/smapy/docs/twitter_token.md)
+Read how to get access token: [Twitter token](/smapy/docs/twitter_token/)

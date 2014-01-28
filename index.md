@@ -29,7 +29,7 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
 Available connectors:
 
-- `tw` - [Twitter](/smapy/docs/twitter_connector.md)
+- `tw` - [Twitter](/smapy/docs/twitter_connector/)
     
 - `fb` - Facebook
     

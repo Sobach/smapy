@@ -1,6 +1,9 @@
 ---
-title: Document Center
+layout: page
+title: Connectors / smapy
 ---
+
+# Connectors
 
 Most of the popular social media services have APIs (application programming interfaces). Using them, one could collect a lot of interesting research data. But there are some difficulties. Every API has its own request endpoints, syntax, response format, rate limits, etc. If you are dealing with more than one social media source - you constantly have to switch between these API-languages. Moreover, if you want to compare multiple networks, first you have to "similarify" your data from different sources.
 
@@ -8,7 +11,7 @@ The main purpose of connectors - is to build a high-level meta-API wrapper, and 
 
 Connectors output standardized pieces of data, that could be used "as is", or processed to more complex models.
 
-### Aviable connectors
+## Aviable connectors
 
 <table>
   <tr>
@@ -39,7 +42,7 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
 \* Time costs evaluated in average number of collected instances per 1 minute.
 
-### Properties
+## Properties
 
 * **accounts**
   
@@ -48,22 +51,35 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 * **network**
 
   Two-letter abbreviation, unique for every network:
+  
     - `tw` - Twitter
+    
     - `fb` - Facebook
+    
     - `gp` - Google+
+    
     - `ig` - Instagram
+    
     - `lj` - LiveJournal
+    
     - `vk` - VKontakte
+    
     - `yt` - YouTube
 
 * **token**
 
   Access token to make requests to network's API. Not required for some networks (i.e. Livejournal). Read more about how to get tokens to different networks:
+  
   * [[Facebook token]]
+
   * [[Twitter token]]
+
   * [[Google token]]
+
   * [[Instagram token]]
+
   * [[VKontakte token]]
+
   * [[Odnoklassniki token]]
 
 * **start_date**
@@ -74,15 +90,17 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
   `datetime` variable, specifying point, until posts and comments are being collected. Default value is `datetime.datetime.now()` (current local date and time).
 
-### Functions-properties
+## Functions-properties
 
 BaseConnector itself describes functions, that are more properties.
 Different connectors just use their own get_{property} functions.
 List of functions-properties:
+
 * **profiles**
 
   Dictionary object. Keys - the same as **accounts** dict keys.
   Values - None (if error with object occured) or dict with these keys:
+  
     ```python
         {
          'id'       :STRING,
@@ -95,10 +113,15 @@ List of functions-properties:
     ```
 
     - id - Network-specific user's id. Can be used (but not necessary) to build canonical URL for profile. In smapy used for definite object identification.
+    
     - nickname - Part of url, used to identify user inside the network. Can be based on id, or represent seaprate short name.
+    
     - name - Full name, specified by user.
+    
     - link - URL to account's profile (not necessary canonical form).
+    
     - followers - number of other accounts inside network, who can view posts/publications of current account. I.e., in Twitter - number of followers; in LiveJournal - number of 'friends of' for personal account, or members for communities; for personal Facebook accounts - it's number of friends plus number of subscribers.
+    
     - type - 'person' or 'page' - distinguishes personal user accounts and pages/groups/communities/events (all types of collective accounts, avaliable for specified network).
 
 * **statuses**
@@ -120,14 +143,22 @@ List of functions-properties:
     ```
 
     - id -
+    
     - link -
+    
     - date - 
+    
     - reposts - 
+    
     - replies - 
+    
     - likes - 
+    
     - text - 
 
-* COMMENTS: Dictionary object. Keys - the same as ACCOUNTS dict keys.
+* **comments**
+
+  Dictionary object. Keys - the same as ACCOUNTS dict keys.
   Values - list of comments/replies to person (possibly empty).
   Every list element is a dict with these keys:
 
@@ -142,10 +173,14 @@ List of functions-properties:
         }
     ```
 
-### Functions
+## Functions
 
 Every connector, based on BaseConnector required to have these functions:
+
 - `get_profiles()`;
+
 - `get_statuse()`;
+
 - `get_comments()`;
+
 - `check_token()`.
