@@ -1,26 +1,36 @@
 ---
-title: Document Center
+layout: page
+title: KeyChain
 ---
+
+# KeyChain
 
 KeyChain - is a kind of storage for connectors' tokens. Besides it has some useful methods, like: generating valid token fram raw login data, or checking token's validity. KeyChain class located in the `smapy.network_connectors.addons` section.
 
 > **Important!** 
+
 > All tokens are stored without any encryption. So be careful, using your real and valuable network profiles and/or dumping data to distrusting places. Keep in mind, that you are using this functionality at your won risk.
 
 Read more on how to get tokens for different networks:
 
-* [[Facebook token]]
-* [[Twitter token]]
-* [[Google token]]
-* [[Instagram token]]
-* [[VKontakte token]]
-* [[Odnoklassniki token]]
+* [Facebook token](/smapy/docs/facebook_token/)
 
-### Documentation
+* [Twitter token](/smapy/docs/twitter_token/)
+
+* [Google token](/smapy/docs/google_token/)
+
+* [Instagram token](/smapy/docs/instagram_token/)
+
+* [VKontakte token](/smapy/docs/vkontakte_token/)
+
+* [Odnoklassniki token](/smapy/docs/odnoklassniki_token/)
+
+## Documentation
 
 _class_ smapy.network_connectors.addons.**KeyChain()**
 
 Public methods:
+
 * **assign**(_net, token_)
 
     If `net` parameter is registered in network_connectors - assigns `token` value to apropriate net. Usually `net` is a two-letter social media channel identifier. But in some cases it has `raw_` prefix, which means that authorisation is needed to produce appropriate token. Raw prefixes available for Facebook and VKontakte. After assigning `autocomplete()` method is called.
@@ -52,8 +62,11 @@ Public methods:
 * **available_dumps**(*key_dir = os.path.dirname(\__file\__)*)
 
     This method checks specified directory and loads all saved KeyChain dumps from it. Method returns dictionary object with three items:
+    
     - `hash` - name of the dump-file without extension;
+    
     - `date` - datetime stamp of the dump (when it was created);
+    
     - `networks` - list of two-letter (and raw_ prefixed) identifiers of avaliable networks in the dump.
 
     Used to review all available dumps to choose required before loading.
@@ -67,7 +80,7 @@ Public methods:
     Combined `available_dumps()` and `load()` methods. Scans all available dumps in the folder, and then loads the newest. Returns True, if dump was loaded. Otherwise - False.
 
 
-### Example
+## Example
 
 ```python
 >>> from smapy.network_connectors.addons import KeyChain

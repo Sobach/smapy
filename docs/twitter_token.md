@@ -1,6 +1,9 @@
 ---
-title: Document Center
+layout: default
+title: Twitter access token
 ---
+
+# Twitter access token
 
 How-to: recieving access token for Twitter(_www.twitter.com_).
 
@@ -13,6 +16,7 @@ How-to: recieving access token for Twitter(_www.twitter.com_).
 3. Fill name, description and website fileds (website field required, but wouldn't be used, so enter whatever you want). Check "Agree with developers rules", enter captcha, and submit the form.
 
  ![Creating app form-1](https://dl.dropboxusercontent.com/u/81437006/smapy/token_tw_1.PNG)
+ 
  ![Creating app form-2](https://dl.dropboxusercontent.com/u/81437006/smapy/token_tw_2.PNG)
 
 4. You will be redirected to the "detailes" app page. In the bottom there is "You access token" section and "Create my access token" button. 
