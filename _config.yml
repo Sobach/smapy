@@ -1,0 +1,9 @@
+# For Atom Feed
+domain: sobach.github.io
+author: Alexander Tolmach
+email: tolmach@me.com
+title: smapy docs
+
+permalink: /:title
+
+encoding: UTF-8
