@@ -1,16 +1,22 @@
 ---
 layout: default
-title: Home
+title: Home / smapy
 ---
 
 # Python module smapy
 
 Social media anatomist for Python (smapy) is a comprehensive tool for social media researchers: sociologists, culturologists, anthropologists, etc. It provides unified interfaces to number of popular social networks and blog platforms (Connectors); collection of structured data instances (Models); and several templates for models representation (Exporters). These three blocks correspond to appropriate data-collecting stages:
+
 * Creating standardized bricks of raw social media data;
+
 * Building from these bricks comparable models;
+
 * Saving models in suitable form:
-    - formatted text reports;
+
+    - formatted text reports
+    
     - statistic tables;
+    
     - graph/network structures.
 
 # Connectors
@@ -22,12 +28,19 @@ The main purpose of connectors - is to build a high-level meta-API wrapper, and 
 Connectors output standardized pieces of data, that could be used "as is", or processed to more complex models.
 
 Available connectors:
+
     - `tw` - Twitter
+    
     - `fb` - Facebook
+    
     - `gp` - Google+
+    
     - `ig` - Instagram
+    
     - `lj` - LiveJournal
+    
     - `vk` - VKontakte
+    
     - `yt` - YouTube
 
 # Models
