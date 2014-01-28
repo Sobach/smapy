@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 Connector to Facebook social network (http://www.facebook.com).
 
 ### Time costs:

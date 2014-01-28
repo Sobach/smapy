@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 Connector to Twitter micro-blog platform (http://www.twitter.com).
 
 ### Time costs:

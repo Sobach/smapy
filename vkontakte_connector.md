@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 Connector to VK social network (http://www.vk.com).
 
 ### Time costs:

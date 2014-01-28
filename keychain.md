@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 KeyChain - is a kind of storage for connectors' tokens. Besides it has some useful methods, like: generating valid token fram raw login data, or checking token's validity. KeyChain class located in the `smapy.network_connectors.addons` section.
 
 > **Important!** 

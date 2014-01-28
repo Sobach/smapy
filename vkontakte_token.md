@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 How-to: recieving access token for VK (www.vk.com).
 
 ## Registering application

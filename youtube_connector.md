@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 Connector to YouTube video sharing system (http://www.youtube.com).
 
 ### Time costs:

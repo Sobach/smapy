@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 How-to recieve access token to Odnoklassniki (_www.odnoklassniki.ru_).
 
 ## Registering application

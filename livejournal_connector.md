@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 Connector to LiveJournal blog platform (http://www.livejournal.com).
 
 ### Time costs:

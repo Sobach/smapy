@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 How-to: recieving access token for Twitter(_www.twitter.com_).
 
 ## Registering application

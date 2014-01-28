@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 How-to: recieving access token for Instagram (www.instagram.com).
 
 ## Registering application

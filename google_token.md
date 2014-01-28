@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 How-to: recieving access token for Google products: Google+ (http://plus.google.com) and YouTube (http://www.youtube.com).
 
 ## Registering application

@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 Connector to Google Plus social network (http://plus.google.com).
 
 ### Time costs:
