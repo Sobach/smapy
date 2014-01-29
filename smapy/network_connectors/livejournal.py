@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from ..utilities import *
-from .base import *
-from ..settings import *
+from base import *
+from settings import *
+from utilities import strip_tags, strip_spaces
+from http_utilities import get_url, get_html, get_json
 import logging
 from time import sleep
 import datetime
 import re
 import bs4
 import json
-from httplib import BadStatusLine
 
 class LiveJournalConnector(BaseConnector):
     """Connector to LiveJournal (http://www.livejournal.com)"""
@@ -27,7 +27,7 @@ class LiveJournalConnector(BaseConnector):
         retdict = {}
         for user in self.accounts.keys():
             url = 'http://users.livejournal.com/{}/profile'.format(self.accounts[user].replace('-', '_'))
-            tree = urlrequest(url, get = True)
+            tree = get_html(url, get = True)
             if not tree:
                 logging.warning(u'LJ: No data for {}.'.format(user))
                 retdict[user] = None
@@ -88,7 +88,7 @@ class LiveJournalConnector(BaseConnector):
             posts = []
             posturl = None
             token = None
-            rss_posts = urlrequest('http://users.livejournal.com/{}/data/rss'.format(self.accounts[user]), get = True)
+            rss_posts = get_html('http://users.livejournal.com/{}/data/rss'.format(self.accounts[user]), get = True)
             try:
                 posturl = rss_posts.find('item').comments.get_text()
             except AttributeError:
@@ -96,7 +96,7 @@ class LiveJournalConnector(BaseConnector):
                 pass
             else:
                 while True:
-                    html = urlrequest('{}?format=light'.format(posturl), get = True)
+                    html = get_html('{}?format=light'.format(posturl), get = True)
                     ljdat = datetime.datetime.strptime(html.find('span', 'b-singlepost-author-date').get_text(), '%Y-%m-%d %H:%M:%S')
                     if ljdat >= start_date and ljdat <= fin_date:
                         postid = re.search(r'/(\d+)\.html', posturl).group(1)
@@ -118,7 +118,7 @@ class LiveJournalConnector(BaseConnector):
                                               "auth_token":token},
                                               "id":i}])
                         i += 1
-                        fr = jsonrequest(l, params = params, encode_params = False)
+                        fr = get_json(l, params = params, encode_params = False)
                         if fr:
                             try:
                                 num_rt = int(fr[0]['result']['count'])
@@ -147,23 +147,7 @@ class LiveJournalConnector(BaseConnector):
                             'likes':0})
                     if ljdat < start_date:
                         break
-                    while True:
-                        try:
-                            posturl = urlopen(Request(html.find('a', 'b-controls-prev').get('href'))).url
-                            break
-                        except URLError as e:
-                            if 'Gateway Time-out' in str(e):
-                                sleep(20)
-                                pass
-                            elif 'Service Unavailable' in str(e):
-                                sleep(60)
-                                pass
-                            else:
-                                posturl = None
-                                break
-                        except BadStatusLine:
-                            sleep(2)
-                            pass
+                    posturl = get_url(html.find('a', 'b-controls-prev').get('href'), get = True, read = False).url
                     if not posturl:
                         break
             retdict[user] = posts
@@ -189,7 +173,7 @@ class LiveJournalConnector(BaseConnector):
             if tree.find('div', 'b-pager-next'):
                 nexturl = tree.find('div', 'b-pager-next').find('a').get('href')
                 if 'http' in nexturl:
-                    comments.update(self.__html_comments_pager__(urlrequest(nexturl, get = True)))
+                    comments.update(self.__html_comments_pager__(get_html(nexturl, get = True)))
         return comments
 
     def __json_comments_parser__(self, js_data):
@@ -240,7 +224,7 @@ class LiveJournalConnector(BaseConnector):
                     if lnk['name'] == 'expand':
                         url_param = re.search(r'http://([^\.]*)[^\d]*(\d*)\.html.*thread=(\d*)', lnk['href'])
                         break
-                next_js = jsonrequest(
+                next_js = get_json(
                     'http://{0}.livejournal.com/{0}/__rpc_get_thread?journal={0}&itemid={1}&flat=&skip=&thread={2}&expand_all=1'.format(url_param.group(1),url_param.group(2),url_param.group(3)),
                     get = True)
                 if next_js:
@@ -256,7 +240,7 @@ class LiveJournalConnector(BaseConnector):
                     if lnk.get('onclick'):
                         url_param = re.search(r'http://([^\.]*)[^\d]*(\d*)\.html.*thread=(\d*)', lnk['href'])
                         break
-                next_js = jsonrequest(
+                next_js = get_json(
                     'http://{0}.livejournal.com/{0}/__rpc_get_thread?journal={0}&itemid={1}&flat=&skip=&thread={2}&expand_all=1'.format(url_param.group(1),url_param.group(2),url_param.group(3)),
                     get = True)
                 if next_js:

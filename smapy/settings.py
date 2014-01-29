@@ -21,14 +21,14 @@ ADDITIONAL_TIME_OFFSET = 0
 TIME_OFFSET = local_time_offset() + ADDITIONAL_TIME_OFFSET
 
 # Connector types
-from .network_connectors.facebook import FacebookConnector
-from .network_connectors.instagram import InstagramConnector
-from .network_connectors.livejournal import LiveJournalConnector
-from .network_connectors.twitter import TwitterConnector
-from .network_connectors.vkontakte import VKontakteConnector
-from .network_connectors.youtube import YouTubeConnector
-from .network_connectors.googleplus import GooglePlusConnector
-from .network_connectors.odnoklassniki import OdnoklassnikiConnector
+from network_connectors.facebook import FacebookConnector
+from network_connectors.instagram import InstagramConnector
+from network_connectors.livejournal import LiveJournalConnector
+from network_connectors.twitter import TwitterConnector
+from network_connectors.vkontakte import VKontakteConnector
+from network_connectors.youtube import YouTubeConnector
+from network_connectors.googleplus import GooglePlusConnector
+from network_connectors.odnoklassniki import OdnoklassnikiConnector
 
 CONNECTORS = {
     'fb':{'networkname':u'Facebook',

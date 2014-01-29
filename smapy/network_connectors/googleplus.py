@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from .base import *
-from ..utilities import *
-from ..settings import *
+from base import *
+from settings import *
+from utilities import strip_spaces, strip_tags
+from http_utilities import get_json
 import logging
 from time import sleep
 import datetime
@@ -19,7 +20,7 @@ class GooglePlusConnector(BaseConnector):
 
     def _token_checker(self):
         url = 'https://www.googleapis.com/plus/v1/people?query=google&key={}'.format(self.token)
-        info = jsonrequest(url, get = True)
+        info = get_json(url, get = True)
         if not info or 'error' in info:
             logging.critical(u'GP: Access token is not valid.')
             self._token_ok = False
@@ -34,7 +35,7 @@ class GooglePlusConnector(BaseConnector):
         for user in self.accounts.keys():
             if not re.search(ur'^\d+$', self.accounts[user]):
                 url = 'https://www.googleapis.com/plus/v1/people?query={}&key={}'.format(quote_plus(self.accounts[user].encode('utf-8')), token)
-                resp = jsonrequest(url, get = True)
+                resp = get_json(url, get = True)
                 uid = 0
                 if not resp or 'items' not in resp:
                     retdict[user] = None
@@ -51,7 +52,7 @@ class GooglePlusConnector(BaseConnector):
             else:
                 uid = self.accounts[user].encode('utf-8')
             url = 'https://www.googleapis.com/plus/v1/people/{0}?key={1}'.format(uid, token)
-            resp = jsonrequest(url, get = True)
+            resp = get_json(url, get = True)
             if not resp:
                 retdict[user] = None
                 logging.warning(u'GP: No data for {}.'.format(user))
@@ -87,7 +88,7 @@ class GooglePlusConnector(BaseConnector):
             posts = []
             url = 'https://www.googleapis.com/plus/v1/people/{}/activities/public?key={}'.format(self._profiles[user]['id'], token)
             while True:
-                resp = jsonrequest(url, get = True)
+                resp = get_json(url, get = True)
                 if not resp or 'items' not in resp:
                     break
                 for post in resp['items']:
@@ -139,7 +140,7 @@ class GooglePlusConnector(BaseConnector):
                 if post['replies'] > 0:
                     url = 'https://www.googleapis.com/plus/v1/activities/{0}/comments?key={1}'.format(post['id'], token)
                     while True:
-                        resp = jsonrequest(url, get = True)
+                        resp = get_json(url, get = True)
                         if not resp or 'items' not in resp:
                             break
                         for element in resp['items']:

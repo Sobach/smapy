@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from ..utilities import *
-from ..settings import *
-from .base import *
+from utilities import check_dublicates_complete, strip_spaces
+from http_utilities import get_url, get_json
+from settings import *
+from base import *
 from urllib import quote_plus
 from time import sleep
 import logging
@@ -18,12 +19,12 @@ class FacebookConnector(BaseConnector):
 
     def _token_checker(self):
         url = 'https://graph.facebook.com/me?access_token={}'.format(self.token)
-        info = linkrequest(url, get = True, log_activity = False)
+        info = get_url(url, get = True, log_activity = False)
         if info:
             self._token_ok = True
             return True
         url = 'https://graph.facebook.com/{}?access_token={}'.format(self.token.split('|')[0], self.token)
-        info = linkrequest(url, get = True, log_activity = False)
+        info = get_url(url, get = True, log_activity = False)
         if info:
             logging.warning(u'FB: Your token has limited functionality. You can\'t count person\'s subscribers and some other things.')
             self._token_ok = True
@@ -43,7 +44,7 @@ class FacebookConnector(BaseConnector):
             }
             url = 'https://graph.facebook.com/{0}?access_token={1}'.\
                 format(self.accounts[user], token)
-            info = jsonrequest(url, get = True)
+            info = get_json(url, get = True)
             if not info:
                 retdict[user] = None
                 logging.warning(u'FB: No data for {}.'.format(user))
@@ -56,14 +57,14 @@ class FacebookConnector(BaseConnector):
             else:
                 url = 'https://graph.facebook.com/{0}/subscribers?access_token={1}'.format(udict['id'], token)
                 try:
-                    subscr = int(jsonrequest(url, get = True, noerrors = True)['summary']['total_count'])
+                    subscr = int(get_json(url, get = True, noerrors = True)['summary']['total_count'])
                 except:
                     subscr = 0
                     logging.warning(u'FB: Exception while getting subscribers for {} (id: {}).'.format(user, udict['id']))
                 req = quote_plus('SELECT friend_count FROM user WHERE uid = {0}'.format(udict['id']))
                 url = 'https://graph.facebook.com/fql?q={0}&access_token={1}'.format(req, token)
                 try:
-                    fri = int(jsonrequest(url, get = True, noerrors = True)['data'][0]['friend_count'])
+                    fri = int(get_json(url, get = True, noerrors = True)['data'][0]['friend_count'])
                 except:
                     fri = 0
                     logging.warning(u'FB: Exception while getting friends for {} (id: {}).'.format(user, udict['id']))
@@ -94,7 +95,7 @@ class FacebookConnector(BaseConnector):
             posts = []
             url = 'https://graph.facebook.com/{0}/posts?access_token={1}'.format(self.accounts[user], token)
             while True:
-                fb_data = jsonrequest(url, get = True)
+                fb_data = get_json(url, get = True)
                 if not fb_data or 'data' not in fb_data:
                     break
                 for post in fb_data['data']:
@@ -180,7 +181,7 @@ class FacebookConnector(BaseConnector):
     def __add_comments(self, url):
         comments = []
         while True:
-            com_data = jsonrequest(url, get = True)
+            com_data = get_json(url, get = True)
             if com_data and 'data' in com_data:
                 for comment in com_data['data']:
                     comments.append({
@@ -200,7 +201,7 @@ class FacebookConnector(BaseConnector):
     def __add_likes(self, url):
         likes = []
         while True:
-            like_data = jsonrequest(url, get = True)
+            like_data = get_json(url, get = True)
             if like_data and 'data' in like_data:
                 for like in like_data['data']:
                     likes.append({

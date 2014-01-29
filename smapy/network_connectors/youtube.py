@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from .base import *
-from ..utilities import *
-from ..settings import *
+from base import *
+from settings import *
+from utilities import strip_spaces, strip_tags
+from http_utilities import get_json
 import logging
 from time import sleep
 import datetime
@@ -17,7 +18,7 @@ class YouTubeConnector(BaseConnector):
 
     def _token_checker(self):
         url = 'https://www.googleapis.com/plus/v1/people?query=google&key={}'.format(self.token)
-        info = jsonrequest(url, get = True)
+        info = get_json(url, get = True)
         if not info or 'error' in info:
             logging.critical(u'YT: Access token is not valid.')
             self._token_ok = False
@@ -30,7 +31,7 @@ class YouTubeConnector(BaseConnector):
         retdict = {}
         for user in self.accounts.keys():
             url =  'https://www.googleapis.com/youtube/v3/search?part=id,snippet&q={0}&type=channel&key={1}'.format(self.accounts[user], token)
-            yt_data = jsonrequest(url, get = True)
+            yt_data = get_json(url, get = True)
             if not isinstance(yt_data, dict) or 'items' not in yt_data:
                 retdict[user] = None
                 logging.warning(u'YT: No data for {}.'.format(user))
@@ -42,7 +43,7 @@ class YouTubeConnector(BaseConnector):
                     found = True
                     uid = item['id']['channelId']
                     url = 'https://www.googleapis.com/youtube/v3/channels?part=contentDetails%2Cstatistics&id={}&key={}'.format(item['id']['channelId'], token)
-                    prof_data = jsonrequest(url, get = True)
+                    prof_data = get_json(url, get = True)
                     if not isinstance(prof_data, dict) or 'items' not in prof_data:
                         retdict[user] = None
                         logging.warning(u'YT: No data for {}.'.format(user))
@@ -81,7 +82,7 @@ class YouTubeConnector(BaseConnector):
                 prevId = ''
                 url = burl
                 while True:
-                    yt_data = jsonrequest(url, get = True)
+                    yt_data = get_json(url, get = True)
                     if not isinstance(yt_data, dict) or 'items' not in yt_data or len(yt_data['items']) == 0:
                         break
                     checkId = yt_data['items'][0]['id']['videoId']
@@ -111,7 +112,7 @@ class YouTubeConnector(BaseConnector):
             for i in range(0, len(posts.keys()), step):
                 idl = '%2C'.join([str(x) for x in posts.keys()[i:i+step]])
                 url = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id={}&key={}'.format(idl,token)
-                yt_stat = jsonrequest(url, get = True)
+                yt_stat = get_json(url, get = True)
                 if not isinstance(yt_stat, dict) or 'items' not in yt_stat:
                     logging.warning(u'YT: Posts likes and comments stat may be not full')
                     continue
@@ -135,7 +136,7 @@ class YouTubeConnector(BaseConnector):
                 if post['replies'] > 0:
                     url = 'http://gdata.youtube.com/feeds/api/videos/{}/comments?max-results=50&alt=json&key={}'.format(post['id'], token)
                     while True:
-                        yt_comments = jsonrequest(url, get = True)
+                        yt_comments = get_json(url, get = True)
                         if not isinstance(yt_comments, dict) or 'feed' not in yt_comments or 'entry' not in yt_comments['feed']:
                             break
                         for comment in yt_comments['feed']['entry']:

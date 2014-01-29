@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from .base import *
-from ..utilities import *
-from ..settings import *
+from base import *
+from settings import *
+from utilities import strip_tags, strip_spaces
+from http_utilities import get_json
 import logging
 from time import sleep
 import datetime
@@ -19,7 +20,7 @@ class VKontakteConnector(BaseConnector):
     def _token_checker(self):
         url = 'https://api.vk.com/method/isAppUser'
         params = {'access_token':self.token}
-        response = self.__apirequest(url, params)
+        response = self.__api_request__(url, params)
         if isinstance(response, dict) and 'response' in response and response['response'] == '1':
             return True
         logging.critical(u'VK: Access token is not valid.')
@@ -83,7 +84,7 @@ class VKontakteConnector(BaseConnector):
                 uid = str(self._profiles[user]['id'])
             while offset < maxoffset:
                 params = {'owner_id': uid, 'access_token':token, 'count':100, 'offset':offset, 'filter':wall_filter}
-                vk_data = self.__apirequest(url, params)
+                vk_data = self.__api_request__(url, params)
                 if not isinstance(vk_data, dict) or 'response' not in vk_data or len(vk_data['response']) < 1:
                     logging.warning(u'VK: No posts on wall {} (id: {})'.format(user, uid))
                     break
@@ -131,7 +132,7 @@ class VKontakteConnector(BaseConnector):
                     offset = 0
                     while offset < maxoffset:
                         params = {'owner_id': uid, 'post_id':post['id'].split('_')[-1], 'preview_length':0, 'access_token':token, 'count':100, 'offset':offset}
-                        vk_data = self.__apirequest(url, params)
+                        vk_data = self.__api_request__(url, params)
                         if not isinstance(vk_data, dict) or 'response' not in vk_data or len(vk_data['response']) < 1:
                             logging.warning(u'VK: No posts on wall {} (id: {})'.format(user, uid))
                             break
@@ -157,7 +158,7 @@ class VKontakteConnector(BaseConnector):
             'access_token':self.token,
             'uids':uid,
             }
-        response = self.__apirequest(url, params)
+        response = self.__api_request__(url, params)
         if 'error' in response:
             if response['error']['error_code'] == 113:
                 return self.__page_profile(uid, udict)
@@ -170,13 +171,13 @@ class VKontakteConnector(BaseConnector):
         url = 'https://api.vk.com/method/friends.get'
         params = {'uid': udict['id'], 'access_token':self.token}
         try:
-            friends = len(self.__apirequest(url, params)['response'])
+            friends = len(self.__api_request__(url, params)['response'])
             sleep(.5)
         except KeyError:
             friends = 0
         url = 'https://api.vk.com/method/subscriptions.getFollowers'
         params = {'uid': udict['id'], 'access_token':self.token}
-        subscrib = int(self.__apirequest(url, params)['response']['count'])
+        subscrib = int(self.__api_request__(url, params)['response']['count'])
         udict['followers'] = subscrib + friends
         return udict
 
@@ -187,7 +188,7 @@ class VKontakteConnector(BaseConnector):
             'access_token':self.token,
             'gid':uid
             }
-        response = self.__apirequest(url, params)
+        response = self.__api_request__(url, params)
         if 'error' in response:
             return None
         udict['id'] = response['response'][0]['gid']
@@ -196,14 +197,14 @@ class VKontakteConnector(BaseConnector):
         url = 'https://api.vk.com/method/groups.getMembers'
         params = {'gid': udict['id'], 'access_token':self.token}
         try:
-            udict['followers'] = int(self.__apirequest(url, params)['response']['count'])
+            udict['followers'] = int(self.__api_request__(url, params)['response']['count'])
         except:
             logging.warning(u'VK: Exception while getting followers for {} (id: {})'.format(udict['name'], udict['id']))
         return udict
 
-    def __apirequest(self, url, params):
+    def __api_request__(self, url, params):
         while True:
-            answer = jsonrequest(url, params = params)
+            answer = get_json(url, params = params)
             if isinstance(answer, dict) and 'error' in answer:
                 if answer['error']['error_code'] == 6:
                     sleep(1)

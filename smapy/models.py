@@ -3,7 +3,7 @@
 
 """smapy - social media abstract models module"""
 
-from .settings import *
+from settings import *
 import datetime
 import re
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from ..utilities import vk_auth, fb_auth, ok_auth
-from ..settings import *
+from settings import *
+from http_utilities import vk_auth, fb_auth, ok_auth
 import pprint
 import datetime
 import pickle
@@ -42,17 +42,10 @@ class KeyChain(object):
 
     def autocomplete(self):
         if 'raw_vk' in self._keys.keys():
-            self._keys['vk'] = vk_auth(self._keys['raw_vk']['app_id'],
-                               self._keys['raw_vk']['app_secret'],
-                               self._keys['raw_vk']['login'],
-                               self._keys['raw_vk']['password'])
+            self._keys['vk'] = vk_auth(self._keys['raw_vk'])
 
         if 'raw_fb' in self._keys.keys():
-            self._keys['fb'] = fb_auth(self._keys['raw_fb']['app_id'],
-                               self._keys['raw_fb']['app_secret'],
-                               self._keys['raw_fb']['app_url'],
-                               self._keys['raw_fb']['login'],
-                               self._keys['raw_fb']['password'])
+            self._keys['fb'] = fb_auth(self._keys['raw_fb'])
         if 'raw_ok' in self._keys.keys():
             self._keys['ok'], self._keys['raw_ok'] = ok_auth(self._keys['raw_ok'])
 

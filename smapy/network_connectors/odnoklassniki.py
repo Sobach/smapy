@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from .base import *
-from ..utilities import *
-from ..settings import *
+from base import *
+from settings import *
+from http_utilities import get_json
 import logging
 import hashlib
 from urllib import urlencode
-import pprint
 
 class OdnoklassnikiConnector(BaseConnector):
     """Connector to Odnoklassniki social network (http://odnoklassniki.ru)."""
@@ -39,7 +38,7 @@ class OdnoklassnikiConnector(BaseConnector):
         print params
         params['access_token'] = self.token['access_token']
         url = '{}?{}'.format(url, urlencode(params))
-        return jsonrequest(url, get= True)
+        return get_json(url, get= True)
         print params
 
     @need_token

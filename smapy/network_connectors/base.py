@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from ..utilities import *
-from ..settings import *
+from settings import *
+from utilities import check_dublicates_complete
 import logging
 import datetime
 

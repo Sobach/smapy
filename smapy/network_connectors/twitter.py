@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from .base import *
-from ..utilities import *
-from ..settings import *
+from base import *
+from settings import *
+from http_utilities import get_json
 import logging
 from urllib import quote, quote_plus, urlencode, unquote
 import datetime
@@ -13,10 +13,6 @@ import base64
 import hmac
 import hashlib
 import string
-import pprint
-
-url = u'https://api.twitter.com/1.1/users/lookup.json'
-params = {'screen_name':'sobach82','include_entities':'false'}
 
 class TwitterConnector(BaseConnector):
     """Connector to Twitter micro-blog platform (http://www.twitter.com)."""
@@ -50,7 +46,7 @@ class TwitterConnector(BaseConnector):
                     'link':'https://www.twitter.com/{}'.format(element['screen_name']),
                     'followers':element['followers_count']
                     }
-            sleep(5)
+            time.sleep(5)
 
         retdict = {}
         for user in self.accounts.keys():
@@ -81,7 +77,7 @@ class TwitterConnector(BaseConnector):
                           'include_entities':'1',
                           'page':str(i+1)}
                 home_timeline = self.__api_request__(method, params)
-                sleep(5)
+                time.sleep(5)
                 if not home_timeline:
                     break
                 for status in home_timeline:
@@ -137,7 +133,7 @@ class TwitterConnector(BaseConnector):
                             'author_id':tweet['user']['id'],
                             'text':tweet['text']
                             })
-                sleep(5)
+                time.sleep(5)
                 try:
                     if twidate < start_date:
                         logging.info(u'TW: Comments statistics for {} (nick: {}) collected.'.format(user, self.accounts[user]))
@@ -203,4 +199,4 @@ class TwitterConnector(BaseConnector):
                 ]
 
         auth_header = 'OAuth '+', '.join(['{}="{}"'.format(quote(k), quote(v)) for k, v in head])
-        return jsonrequest(url = '{}?{}'.format(url, urlencode(params)), headers = {'Authorization':auth_header}, get = True)
+        return get_json(url = '{}?{}'.format(url, urlencode(params)), headers = {'Authorization':auth_header}, get = True)
