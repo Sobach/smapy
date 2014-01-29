@@ -5,25 +5,29 @@ from .base import *
 from ..utilities import *
 from ..settings import *
 import logging
-from time import sleep
+from urllib import quote, quote_plus, urlencode, unquote
 import datetime
-import oauth2
-import json
-import socks
-import httplib2
-from urllib2 import getproxies
+import time
+import random
+import base64
+import hmac
+import hashlib
+import string
+import pprint
+
+url = u'https://api.twitter.com/1.1/users/lookup.json'
+params = {'screen_name':'sobach82','include_entities':'false'}
 
 class TwitterConnector(BaseConnector):
     """Connector to Twitter micro-blog platform (http://www.twitter.com)."""
 
     def __init__(self, **kargv):
         self.network = u'tw'
-        self.proxy_info = proxy_info()
         BaseConnector.__init__(self, **kargv)
 
     def _token_checker(self):
-        url = 'https://api.twitter.com/1.1/account/verify_credentials.json'
-        answer = self.__oauth_request__(url)
+        method = 'account/verify_credentials'
+        answer = self.__api_request__(method, {})
         if not answer:
             logging.critical(u'TW: Access token is not valid.')
             return False
@@ -36,8 +40,8 @@ class TwitterConnector(BaseConnector):
         api_dict = {}
         for i in range(0, len(self.accounts.values()), step):
             idl = ','.join([str(x) for x in self.accounts.values()[i:i+step]])
-            url = 'https://api.twitter.com/1.1/users/lookup.json?screen_name={}&include_entities=false'.format(idl)
-            info = self.__oauth_request__(url = url)
+            params = {'screen_name':idl, 'include_entities':'false'}
+            info = self.__api_request__('users/lookup', params)
             for element in info:
                 api_dict[element['screen_name'].lower()] = {
                     'id':element['id'],
@@ -46,7 +50,8 @@ class TwitterConnector(BaseConnector):
                     'link':'https://www.twitter.com/{}'.format(element['screen_name']),
                     'followers':element['followers_count']
                     }
-            sleep(6)
+            sleep(5)
+
         retdict = {}
         for user in self.accounts.keys():
             try:
@@ -60,18 +65,22 @@ class TwitterConnector(BaseConnector):
 
     @check_dates
     @need_token
-    def get_statuses(self, start_date, fin_date, token, with_rts = False, count_replies = True, **kargv):
-        if with_rts:
-            with_rts = 1
-        else:
-            with_rts = 0
+    def get_statuses(self, start_date, fin_date, token, by_author_only = True, count_replies = True, **kargv):
+        method = 'statuses/user_timeline'
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])
         for user in userlist[0]:
             posts = []
             for i in range(20):
-                home_timeline = self.__oauth_request__('https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={}&count=200&trim_user=1&include_rts=0&exclude_replies=0&include_entities=1&page={}'.format(self.accounts[user], i+1))
+                params = {'screen_name':self.accounts[user],
+                          'count':'200',
+                          'trim_user':'1',
+                          'include_rts':str(int(not(by_author_only))),
+                          'exclude_replies':'0',
+                          'include_entities':'1',
+                          'page':str(i+1)}
+                home_timeline = self.__api_request__(method, params)
                 sleep(5)
                 if not home_timeline:
                     break
@@ -92,7 +101,7 @@ class TwitterConnector(BaseConnector):
                     break
                 if i == 19:
                     logging.info(u'TW: Posts statistics for {} (nick: {}) collected.'.format(user, self.accounts[user]))
-                    logging.warning(u'TW: Posts statistics for {} (nick: {}) possible not full. Last tweet date is {}.'.format(user, self.accounts[user], twidate.strftime('%d.%m.%Y')))
+                    logging.warning(u'TW: Posts statistics for {} (nick: {}) possible not full. Last tweet timestamp is {}.'.format(user, self.accounts[user], twidate.strftime('%d.%m.%Y %H:%M')))
             retdict[user] = posts
 
         if count_replies:
@@ -103,16 +112,17 @@ class TwitterConnector(BaseConnector):
     @check_dates
     @need_token
     def get_comments(self, start_date, fin_date, token, **kargv):
+        method = 'search/tweets'
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])
         for user in userlist[0]:
             comments = []
-            url = 'https://api.twitter.com/1.1/search/tweets.json?q=to%3A{}&count=100&until={}'.format(self.accounts[user],
-                                                                                              (fin_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
-            logging.debug(u'TW: Comments for {}'.format(url))
+            params = {'q':'to:{}'.format(self.accounts[user]),
+                      'count':'100',
+                      'until':(fin_date + datetime.timedelta(days=1)).strftime('%Y-%m-%d')}
             while True:
-                page = self.__oauth_request__(url)
+                page = self.__api_request__(method, params)
                 if not page or 'statuses' not in page:
                     logging.error(u'TW: Comments collection error for {}.'.format(self.accounts[user]))
                     break
@@ -134,9 +144,7 @@ class TwitterConnector(BaseConnector):
                         break
                     else:
                         try:
-                            nurl = 'https://api.twitter.com/1.1/search/tweets.json' + str(page['search_metadata']['next_results'])
-                            logging.debug(u'TW: urls: {}, {}'.format(url, nurl))
-                            url = nurl
+                            params = {unquote(k):unquote(v) for k, v in [tuple(x.split('=')) for x in str(page['search_metadata']['next_results'])[1:].split('&')]}
                         except KeyError:
                             logging.info(u'TW: Comments statistics for {} (nick: {}) collected.'.format(user, self.accounts[user]))
                             break
@@ -145,10 +153,11 @@ class TwitterConnector(BaseConnector):
                     twidate = start_date
                     break
 
-            if twidate > start_date:
-                logging.warning(u'TW: Comments statistics for {} (nick: {}) possible not full. Last tweet date is {}.'.format(user, self.accounts[user], twidate.strftime('%d.%m.%Y')))
+            if len(comments) > 0 and twidate > start_date:
+                logging.warning(u'TW: Comments statistics for {} (nick: {}) possible not full. Last tweet timestamp is {}.'.format(user, self.accounts[user], twidate.strftime('%d.%m.%Y %H:%M')))
 
             retdict[user] = comments
+            del twidate
         return retdict
 
     @need_comments
@@ -165,43 +174,33 @@ class TwitterConnector(BaseConnector):
                 pass
         return statuses
 
-    def __oauth_request__(self, url):
-        try:
-            self.client
-        except AttributeError:
-            consumer = oauth2.Consumer(key=self.token['consumer_key'], secret=self.token['consumer_secret'])
-            token = oauth2.Token(key=self.token['access_token'], secret=self.token['access_secret'])
-            self.client = oauth2.Client(consumer, token, proxy_info = self.proxy_info)
+    def __api_request__(self, method, params):
+        url = 'https://api.twitter.com/1.1/{}.json'.format(method)
+        nonce = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(32))
+        tstamp = str(int(time.time()))
 
-        while True:
-            logging.debug(u'TW: OAUTH: {}'.format(url))
-            resp, content = self.client.request(
-                url,
-                method='GET',
-                body=None,
-                headers=None,
-                force_auth_header=True
-            )
-            if resp['status'] == '200':
-                logging.debug(u'TW: OAUTH: Returnet smth'.format(url))
-                return json.loads(content.decode('utf-8'))
-            elif resp['status'] == '429': # Rate limit exceed
-                s_time = (datetime.datetime.fromtimestamp(int(resp['x-rate-limit-reset'])) - datetime.datetime.now()).seconds + 1
-                logging.warning(u'TW: Rate limit exceeded, will sleep {} seconds.'.format(s_time))
-                sleep(s_time)
-            elif resp['status'] == '404': # No such page (user, tweet, etc.)
-                logging.warning(u'TW: No such page: {}.'.format(url))
-                return None
-            elif resp['status'] == '401': # Token is not valid
-                logging.warning(u'TW: Token is not valid.')
-                return None
-            else:
-                logging.error(u'TW: SMTH WRONG: {}'.format(str(resp)))
-                return None
+        sig_params = {
+            'oauth_consumer_key':quote(self.token['consumer_key']),
+            'oauth_nonce': quote(nonce),
+            'oauth_signature_method':'HMAC-SHA1',
+            'oauth_timestamp': tstamp,
+            'oauth_token':quote(self.token['access_token']),
+            'oauth_version':'1.0'
+            }
 
-def proxy_info():
-    try:
-        p_inf = getproxies()['http'].split(':')
-        return httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP, p_inf[1][2:], int(p_inf[-1]))
-    except KeyError:
-        return None
+        for k, v in params.items():
+            sig_params[quote(k)] = quote(v)
+
+        sign_string = 'GET&'+quote_plus(url)+'&'+quote('&'.join(['{}={}'.format(k, v) for k, v in sorted(sig_params.items(), key = lambda x:x[0])]))
+        sign = base64.b64encode(hmac.new('{}&{}'.format(self.token['consumer_secret'], self.token['access_secret']), sign_string, hashlib.sha1).digest())
+        head = [('oauth_consumer_key', self.token['consumer_key']),
+                ('oauth_nonce', nonce),
+                ('oauth_signature', sign),
+                ('oauth_signature_method','HMAC-SHA1'),
+                ('oauth_timestamp', tstamp),
+                ('oauth_token', self.token['access_token']),
+                ('oauth_version', '1.0')
+                ]
+
+        auth_header = 'OAuth '+', '.join(['{}="{}"'.format(quote(k), quote(v)) for k, v in head])
+        return jsonrequest(url = '{}?{}'.format(url, urlencode(params)), headers = {'Authorization':auth_header}, get = True)
