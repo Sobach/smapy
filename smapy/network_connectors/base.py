@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from settings import *
-from utilities import check_dublicates_complete
+from smapy.settings import *
+from smapy.utilities import check_dublicates_complete
 import logging
 import datetime
 
@@ -68,7 +68,7 @@ def need_comments(func):
 
 def check_dates(func):
     def wrapper(self, **kargv):
-        if 'start_date' not in kargv.keys():
+        if 'start_date' not in kargv.keys() or not isinstance(kargv['start_date'], datetime.datetime):
             try:
                 kargv['start_date'] = self.start_date
             except AttributeError:
@@ -76,7 +76,7 @@ def check_dates(func):
                 kargv['start_date'] = datetime.datetime.strptime('1990.01.01', '%Y.%m.%d')
         self.start_date = kargv['start_date']
 
-        if 'fin_date' not in kargv.keys():
+        if 'fin_date' not in kargv.keys() or not isinstance(kargv['fin_date'], datetime.datetime):
             try:
                 kargv['fin_date'] = self.fin_date
             except AttributeError:
@@ -160,6 +160,49 @@ Every connector, based on it required to have these functions:
         except AttributeError:
             ulist = self.accounts.keys()
         return ulist, empty_users
+
+    def __setattr__(self, name, value):
+        do_assign = True
+
+        # delete statuses and comments when connector's dates are changed
+        if (name == 'start_date' and hasattr(self, 'start_date') and self.start_date != value) \
+        or (name == 'fin_date' and hasattr(self, 'fin_date') and self.fin_date != value):
+            try:
+                del self._statuses
+            except AttributeError:
+                pass
+            try:
+                del self._comments
+            except:
+                pass
+
+        # prepare accounts on assignment
+        if name == 'accounts':
+            try:
+                del self._profiles
+            except AttributeError:
+                pass
+            try:
+                del self._statuses
+            except AttributeError:
+                pass
+            try:
+                del self._comments
+            except:
+                pass
+            if isinstance(value, dict):
+                pass
+            elif isinstance(value, (list,set,tuple)):
+                value = {v:v for v in value}
+            elif isinstance(value, (str,unicode,int)):
+                value = {unicode(value):unicode(value)}
+            else:
+                logging.critical(u'{}: You can\'t assign {} to accounts.'.format(self.network.upper(), str(value.__class__)))
+                do_assign = False
+
+
+        if do_assign:
+            self.__dict__[name] = value
 
     def _token_checker(self):
         logging.warning(u'{}: There is no network-specific token checker.'.format(self.network.upper()))

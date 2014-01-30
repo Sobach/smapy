@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from base import *
-from settings import *
-from utilities import strip_tags, strip_spaces
-from http_utilities import get_url, get_html, get_json
+from smapy.connectors.base import *
+from smapy.settings import *
+from smapy.utilities import strip_tags, strip_spaces
+from smapy.http_utilities import get_url, get_html, get_json
 import logging
 from time import sleep
 import datetime
@@ -15,8 +15,10 @@ import json
 class LiveJournalConnector(BaseConnector):
     """Connector to LiveJournal (http://www.livejournal.com)"""
 
+    network = u'lj'
+    name = u'LiveJournal'
+
     def __init__(self, **kargv):
-        self.network = u'lj'
         BaseConnector.__init__(self, **kargv)
         self._token_ok = True
 

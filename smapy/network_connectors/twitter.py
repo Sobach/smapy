@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from base import *
-from settings import *
-from http_utilities import get_json
+from smapy.connectors.base import *
+from smapy.settings import *
+from smapy.http_utilities import get_json
 import logging
 from urllib import quote, quote_plus, urlencode, unquote
 import datetime
@@ -16,6 +16,9 @@ import string
 
 class TwitterConnector(BaseConnector):
     """Connector to Twitter micro-blog platform (http://www.twitter.com)."""
+
+    network = u'tw'
+    name = u'Twitter'
 
     def __init__(self, **kargv):
         self.network = u'tw'

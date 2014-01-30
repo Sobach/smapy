@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from base import *
-from settings import *
-from utilities import strip_spaces, strip_tags
-from http_utilities import get_json
+from smapy.connectors.base import *
+from smapy.settings import *
+from smapy.utilities import strip_spaces, strip_tags
+from smapy.http_utilities import get_json
 import logging
 from time import sleep
 import datetime
@@ -14,9 +14,8 @@ import re
 class GooglePlusConnector(BaseConnector):
     """Connector to Google Plus social network (http://plus.google.com)."""
 
-    def __init__(self, **kargv):
-        self.network = u'gp'
-        BaseConnector.__init__(self, **kargv)
+    network = u'gp'
+    name = u'Google+'
 
     def _token_checker(self):
         url = 'https://www.googleapis.com/plus/v1/people?query=google&key={}'.format(self.token)

@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from base import *
-from settings import *
-from http_utilities import get_json
+from smapy.connectors.base import *
+from smapy.settings import *
+from smapy.http_utilities import get_json
 import logging
 import hashlib
 from urllib import urlencode
 
 class OdnoklassnikiConnector(BaseConnector):
     """Connector to Odnoklassniki social network (http://odnoklassniki.ru)."""
-    def __init__(self, **kargv):
-        self.network = u'ok'
-        BaseConnector.__init__(self, **kargv)
+
+    network = u'ok'
+    name = u'Одноклассники'
 
     def _token_checker(self):
         data = self.__api_request__('friends.get')

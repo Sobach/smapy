@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from base import *
-from settings import *
-from utilities import strip_tags, strip_spaces
-from http_utilities import get_json
+from smapy.connectors.base import *
+from smapy.settings import *
+from smapy.utilities import strip_tags, strip_spaces
+from smapy.http_utilities import get_json
 import logging
 from time import sleep
 import datetime
@@ -13,9 +13,8 @@ import re
 class VKontakteConnector(BaseConnector):
     """Connector to VKontakte social network (http://www.vk.com)"""
 
-    def __init__(self, **kargv):
-        self.network = u'vk'
-        BaseConnector.__init__(self, **kargv)
+    network = u'vk'
+    name = u'ВКонтакте'
 
     def _token_checker(self):
         url = 'https://api.vk.com/method/isAppUser'

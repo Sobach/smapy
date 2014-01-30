@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python
 
-from utilities import check_dublicates_complete, strip_spaces
-from http_utilities import get_url, get_json
-from settings import *
-from base import *
+from smapy.utilities import check_dublicates_complete, strip_spaces
+from smapy.http_utilities import get_url, get_json
+from smapy.settings import *
+from smapy.connectors.base import *
 from urllib import quote_plus
 from time import sleep
 import logging
@@ -13,9 +13,8 @@ import datetime
 class FacebookConnector(BaseConnector):
     """Connector to Facebook social network (http://www.facebook.com)."""
 
-    def __init__(self, **kargv):
-        self.network = u'fb'
-        BaseConnector.__init__(self, **kargv)
+    network = u'fb'
+    name = u'Facebook'
 
     def _token_checker(self):
         url = 'https://graph.facebook.com/me?access_token={}'.format(self.token)

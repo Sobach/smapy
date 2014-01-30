@@ -3,7 +3,7 @@
 
 """smapy http-requests utilities"""
 
-from settings import *
+from smapy.settings import *
 import logging
 
 from urllib import urlencode

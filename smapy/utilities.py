@@ -3,7 +3,7 @@
 
 """smapy utilities"""
 
-from settings import *
+from smapy.settings import *
 import json, csv
 import logging
 import bs4
