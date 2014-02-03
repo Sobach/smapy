@@ -46,10 +46,11 @@ Public methods:
     Example:
     
     ```python
+    >>> # To replicate this example you need to have valid KeyChain dump.
     >>> from smapy import KeyChain
-    >>> k = KeyChain()
-    >>> k.load_last()
-    >>> k.check()
+    >>> token_collection = KeyChain()
+    >>> token_collection.load_last()
+    >>> token_collection.check()
     {u'fb': True,
      u'gp': True,
      u'ig': True,
@@ -107,7 +108,7 @@ Public methods:
 ## Example
 
 ```python
->>> from smapy.network_connectors.addons import KeyChain
+>>> from smapy import KeyChain
 >>> token_collection = KeyChain()
 >>> token_collection.assign('fb', 'tHiS_iS_mY_sAmPlE_tOkEn')
 >>> token_collection.check('fb') # Token from this example neither real, nor valid. So:
