@@ -151,6 +151,23 @@ Every connector, based on it required to have these functions:
             else:
                 return {k:[] for k in self.accounts.keys()}
 
+    @need_statuses
+    @need_comments
+    def statuses_with_comments(self, **kargv):
+        retdict = {}
+        for account in self.accounts.keys():
+            postsdict = {}
+            for post in self._statuses[account]:
+                postsdict[post['id']] = post
+                postsdict[post['id']]['comments'] = []
+            for comment in self._comments[account]:
+                if comment['in_reply_to'] in postsdict.keys():
+                    postsdict[comment['in_reply_to']]['comments'].append(comment)
+            for post in postsdict.keys():
+                postsdict[post]['replies'] = len(postsdict[post]['comments'])
+            retdict[account] = postsdict.values()
+        return retdict
+
     def _users_list(self):
         empty_users = {}
         try:
