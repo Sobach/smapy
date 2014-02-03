@@ -4,7 +4,7 @@
 from setuptools import setup
 
 setup(name='smapy',
-      version='0.3.3',
+      version='0.4.0',
       description='Single wrapper for main social media API\'s',
       long_description='''Social media anatomist for Python is a comprehensive tool for social media researchers: sociologists, culturologists, anthropologists, etc. It provides unified interfaces to number of popular social networks and blog platforms (Connectors) and several templates for models representation (Exporters).''',
       classifiers=[
@@ -21,7 +21,7 @@ setup(name='smapy',
       author='Alexander Tolmach',
       author_email='tolmach@me.com',
       license='MIT License',
-      packages=['smapy', 'smapy.network_connectors'],
+      packages=['smapy', 'smapy.connectors'],
       install_requires=[
           'beautifulsoup4',
           'jinja2',
