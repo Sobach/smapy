@@ -27,17 +27,41 @@ Read more on how to get tokens for different networks:
 
 ## Documentation
 
-_class_ smapy.network_connectors.addons.**KeyChain()**
+_class_ smapy.**KeyChain()**
 
 Public methods:
 
-* **assign**(_net, token_)
+* **assign**(_net, token, validate = True, check = False_)
 
-    If `net` parameter is registered in network_connectors - assigns `token` value to apropriate net. Usually `net` is a two-letter social media channel identifier. But in some cases it has `raw_` prefix, which means that authorisation is needed to produce appropriate token. Raw prefixes available for Facebook and VKontakte. After assigning `autocomplete()` method is called.
+    If `net` parameter is registered in smapy.CONNECTORS - assigns `token` value to apropriate net. Usually `net` is a two-letter social media channel identifier. But in some cases it has `raw_` prefix, which means that authorisation is needed to produce appropriate token. Raw prefixes available for Facebook, VKontakte, and Odnoklassniki networks. After assigning `autocomplete()` method is called.
+    
+    `validate` and `check` - two optional parameters for for token verification. When `validate = True` function checks the form of the token (no matter what the content). Most access tokens are just strings (byte or unicode). But some connectors (Odnoklassniki, Twitter) demand dict-token with appropriate keys.
+    
+    When `check = True` function tries to verificate token using smapy.connectors. Every connector has `check_token()` function that does test request to API and returns True if request was successful. If `check = True` and Connector.check_token() would fail -- token wouldn't be assigned.
 
 * **check**(_net = None, token = None_)
 
-    This method checks tokens validity through BaseConnector `check_token()` method. If you need to check the exact token from KeyChain - specify it using net parameter with two-letter network id. This method returns True, if token is valid, or False in other cases. If no parameters specified - all tokens are being checked. In this case method returns dict object with all avaliable networks as keys and True/False values. Also it is possible to specify both net and token. Then this exact token would be checked (regardless to KeyChain value for specified network).
+    This method checks tokens validity through BaseConnector `check_token()` method. If you need to check the exact token from KeyChain -- specify it using net parameter with two-letter network id. This method returns True, if token is valid, or False in other cases. If no parameters specified -- all tokens are being checked. In this case method returns dict object with all avaliable networks as keys and True/False values. Also it is possible to specify both net and token. Then this exact token would be checked (regardless to KeyChain value for specified network).
+    
+    Example:
+    
+    ```python
+    >>> from smapy import KeyChain
+    >>> k = KeyChain()
+    >>> k.load_last()
+    >>> k.check()
+    {u'fb': True,
+     u'gp': True,
+     u'ig': True,
+     u'lj': True,
+     u'ok': False,
+     u'tw': True,
+     u'vk': True,
+     u'yt': True}
+    >>> 
+    ```
+    
+    If both net and token specified - function checks this token, and not assigned token from KeyChain.
 
 * **get**(_net = None_)
 
@@ -49,7 +73,7 @@ Public methods:
 
 * **autocomplete**()
 
-    This method is used to update tokens in KeyChain object. Some network keys may be stored in raw form. Method produces valid token from Raw data and assigns it to KeyChain. Use it after loading KeyChain object from dump (some tokens are time limited).
+    Method is used to update tokens in KeyChain object. Some network keys may be stored in raw form. Method produces valid token from Raw data and assigns it to KeyChain. Use it after loading KeyChain object from dump (some tokens are time limited).
 
 * **show**()
 
@@ -57,11 +81,11 @@ Public methods:
 
 * **dump**(*key_dir = os.path.dirname(&#95;&#95;file&#95;&#95;)*)
 
-    This method stores KeyChain object on hard drive. It uses `pickle` module to create dump and writes it on disk. File name - is a hash-string, obtained from current date and KeyChain tokens. You can specify folder name as `key_dir` parameter. Otherwise KeyChain would be dumped to module's directory.
+    Stores KeyChain object on hard drive. It uses `pickle` module to create dump and writes it on disk. File name - is a hash-string, obtained from current date and KeyChain tokens. You can specify folder name as `key_dir` parameter. Otherwise KeyChain would be dumped to module's directory.
     
 * **available_dumps**(*key_dir = os.path.dirname(&#95;&#95;file&#95;&#95;)*)
 
-    This method checks specified directory and loads all saved KeyChain dumps from it. Method returns dictionary object with three items:
+    Checks specified directory and loads all saved KeyChain dumps from it. Method returns list of dictionary objects with three items:
     
     - `hash` - name of the dump-file without extension;
     
