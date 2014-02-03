@@ -118,7 +118,6 @@ False
 >>> token_collection.get('fb')
 'ChAnGeD_vErSiOn_Of_ToKeN'
 >>> token_collection.load_last() # Loading token collection from last dump
-True
 >>> token_collection.get('fb')
 'tHiS_iS_mY_sAmPlE_tOkEn'
 >>> token_collection.get('ig') # We have not specified Instagram token yet
