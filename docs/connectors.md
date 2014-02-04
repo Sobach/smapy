@@ -13,17 +13,18 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
 ## Aviable connectors and time rates for base data pieces
 
-Every connector is a class, that inherits from `smapy.connectors.BaseConnector()`. This is done for maximal similarity. The only pieces, implemented individually in every conncetor concern low-level API interactions.
+Every connector is a class, that inherits from `smapy.connectors.base.BaseConnector()`. This is done for maximal similarity. The only pieces, implemented individually in every conncetor concern low-level API interactions.
 
-| class propierty                                                        | .profiles() | .statuses() | .comments() |
-|------------------------------------------------------------------------|-------------|-------------|-------------|
-| [`smapy.connectors.Facebook()`](/smapy/docs/facebook_connector/)       |  50         | 750         |  2500       |
-| [`smapy.connectors.Twitter()`](/smapy/docs/twitter_connector/)         |  1000       | 1000        |  1000       |
-| [`smapy.connectors.GooglePlus()`](/smapy/docs/googleplus_connector/)   |  100        | 1000        |  2000       |
-| [`smapy.connectors.YouTube()`](/smapy/docs/youtube_connector/)         |  50         | 400         |  700        |
-| [`smapy.connectors.Instagram()`](/smapy/docs/instagram_connector/)     |  100        | 500         |  2000       |
-| [`smapy.connectors.LiveJournal()`](/smapy/docs/livejournal_connector/) |  30         | 10          |  40         |
-| [`smapy.connectors.VKontakte()`](/smapy/docs/vkontakte_connector/)     |  50         | 3000        |  5000       |
+| class propierty                                                            | .profiles() | .statuses() | .comments() |
+|----------------------------------------------------------------------------|-------------|-------------|-------------|
+| [`smapy.connectors.Facebook()`](/smapy/docs/facebook_connector/)           |  50         | 750         |  2500       |
+| [`smapy.connectors.Twitter()`](/smapy/docs/twitter_connector/)             |  1000       | 1000        |  1000       |
+| [`smapy.connectors.GooglePlus()`](/smapy/docs/googleplus_connector/)       |  100        | 1000        |  2000       |
+| [`smapy.connectors.YouTube()`](/smapy/docs/youtube_connector/)             |  50         | 400         |  700        |
+| [`smapy.connectors.Instagram()`](/smapy/docs/instagram_connector/)         |  100        | 500         |  2000       |
+| [`smapy.connectors.LiveJournal()`](/smapy/docs/livejournal_connector/)     |  30         | 10          |  40         |
+| [`smapy.connectors.VKontakte()`](/smapy/docs/vkontakte_connector/)         |  50         | 3000        |  5000       |
+| [`smapy.connectors.Odnoklassniki()`](/smapy/docs/odnoklassniki_connector/) |  -          | -           |  -          |
 
 \* Time costs evaluated in average number of collected instances per 1 minute.
 
@@ -94,13 +95,13 @@ Every connector is to be unified with others. So there are quite a few differenc
   u'Google+'
   ```
 
-* **accounts**
+* .Connector().**accounts**
 
-  Propierty created on connector initialization. By default it is an epty dict object. `.Connector().accounts()` stores user names to work with. Dict type is used to make it possible to use user-comfortable names as keys, and specific network nicknames or ids as values.
+  Propierty created on connector initialization. By default it is an epty dict object. `.Connector().accounts` stores user names to work with. Dict type is used to make it possible to use user-comfortable names as keys, and specific network nicknames or ids as values.
   
-  It is possible to assign to `.Connector().accounts()` not only dict, but also list, set, tuple, or string object. On assigning they will be converted to dict: in case of list-like objects every element would be both key and value, in case of string (or unicode, or int) - dict with one key-value pair would be created.
+  It is possible to assign to `.Connector().accounts` not only dict, but also list, set, tuple, or string object. On assigning they will be converted to dict: in case of list-like objects every element would be both key and value, in case of string (or unicode, or int) - dict with one key-value pair would be created.
   
-  Reassigning `.Connector().accounts()` on initialised connector deletes all previously collected data (profiles, statuses, comments, etc.).
+  Reassigning `.Connector().accounts` on initialised connector deletes all previously collected data (profiles, statuses, comments, etc.).
   
   *Example:*
   
@@ -120,7 +121,7 @@ Every connector is to be unified with others. So there are quite a few differenc
   {u'rianru': u'rianru'}
   ```
 
-* **token**
+* .Connector().**token**
 
   Access token to make requests to network's API. Not required for some networks (i.e. Livejournal). When working with smapy or any other program - you need to register it on media developers page, authenticate and authorise, and finnaly get access token. Without token most part of the data would be closed. To make the process easier we wrote how-to's for several networks: 
   * [Facebook token](/smapy/docs/facebook_token/)
@@ -137,24 +138,28 @@ Every connector is to be unified with others. So there are quite a few differenc
 
   Follow them once to get your own access token for network(s), you are interested in. Then you can store your keys, using [`smapy.KeyChain()`](/smapy/docs/keychain/) class object.
 
-* **start_date**
+* .Connector().**start_date** and .Connector().**fin_date**
 
-  This is `datetime`-variable, pointing to timestamp from which posts and comments are being collected. Default value is January, 1 1990.
+  This is `datetime`-properties, pointing to timestamp from (start_date) and to (fin_date) which posts and comments are being collected. These dates are used to bound statuses and comments collecting period. If not specified, default values used:
+  
+  - January, 1 1990 for start_date
+  - `datetime.datetime.now()` (current local date and time) for fin_date
 
-* **fin_date**
+  Reassigning `.Connector().start_date` or `.Connector().fin_date` on initialised connector deletes previously collected statuses and comments.
 
-  `datetime` variable, specifying point, until posts and comments are being collected. Default value is `datetime.datetime.now()` (current local date and time).
 
-## Functions-properties
+### Functions
 
-BaseConnector itself describes functions, that are more properties.
-Different connectors just use their own get_{property} functions.
-List of functions-properties:
+* .Connector().**check_token()**
 
-* **profiles**
+  Tries to make test request to appropriate social media to check validity of `self.token` property. Return `True` if access token is valid, otherwise -- `False`. Function, implemented in `smapy.connectors.base.BaseConnector()`, looks for `self.token` property, and then uses `self._token_checker()` function (specific for every connector class).
 
-  Dictionary object. Keys - the same as **accounts** dict keys.
-  Values - None (if error with object occured) or dict with these keys:
+* .Connector().**profiles()**
+
+  Checks, whether profiles data already collected, or not. If not - tries to collect it, using `self._get_statuses(**kargv)` function - it is specific for every connector. Collects data for every user, defined in `self.accounts`.
+  
+  Finnaly, returns dictionary object. Keys -- the same as `.Connector().accounts` dict keys.
+  Values - `None` (if error with object occured) or dict with these keys:
   
     ```python
         {
@@ -169,20 +174,21 @@ List of functions-properties:
 
     - id - Network-specific user's id. Can be used (but not necessary) to build canonical URL for profile. In smapy used for definite object identification.
     
-    - nickname - Part of url, used to identify user inside the network. Can be based on id, or represent seaprate short name.
+    - nickname - Part of url, used to identify user inside the network. Can be based on id, or represent seaprate short name. Mostly - repeats `.Connector().accounts` values.
     
-    - name - Full name, specified by user.
+    - name - Full name, specified by user in network profile.
     
     - link - URL to account's profile (not necessary canonical form).
     
     - followers - number of other accounts inside network, who can view posts/publications of current account. I.e., in Twitter - number of followers; in LiveJournal - number of 'friends of' for personal account, or members for communities; for personal Facebook accounts - it's number of friends plus number of subscribers.
     
-    - type - 'person' or 'page' - distinguishes personal user accounts and pages/groups/communities/events (all types of collective accounts, avaliable for specified network).
+    - type - 'person' or 'page' - distinguishes personal user accounts and pages/groups/communities/events (all types of collective accounts, avaliable for specified network). In Twitter, YouTube, and Instagram `type` always equal to `person`. There is no different account types.
 
-* **statuses**
+* .Connector().**statuses()**
 
-  Dictionary object. Keys - the same as **accounts** dict keys.
-  Values - list of statuses/posts/tweets by person (possibly empty).
+  Checks, whether posts (or statuses) data already collected, or not. If not - tries to collect it, using `self._get_profiles(**kargv)` function - it is specific for every connector. Collects data for every user, defined in `self.accounts`. Time period bounded using `self.start_date` and `self.fin_date` properties. If not specified - default values are used.
+  
+  Finnaly, returns dictionary object. Keys - the same as `.Connector().accounts` dict keys. Values -- list of messages (statuses/posts/tweets) on person's/page's wall (in timeline) -- possibly empty.
   Every list element is a dict with these keys:
 
     ```python
@@ -197,24 +203,25 @@ List of functions-properties:
         }
     ```
 
-    - id -
+    - id - Network-specific message id. Used to identify message itself and comments to this message.
     
-    - link -
+    - link - URL of the message.
     
-    - date - 
+    - date - `datetime` object - time, when the message was written. By default current machine time zone used (not UTC).
     
-    - reposts - 
+    - reposts - number of actions, sharing the message's content to other audiences (share, retweet, repost, recommend, etc.).
     
-    - replies - 
+    - replies - number of comments to the message (by other users or author himself).
     
-    - likes - 
+    - likes - number of actions, marking the message as interesting (likes, +1's, favorites, etc.)
     
-    - text - 
+    - text - text of the message, cleaned from html tags and any media data.
 
-* **comments**
+* .Connector().**comments()**
 
-  Dictionary object. Keys - the same as ACCOUNTS dict keys.
-  Values - list of comments/replies to person (possibly empty).
+  Checks, whether comments to author messages already collected, or not. If not - tries to collect it, using `self._get_comments(**kargv)` function - it is specific for every connector. Collects data for every user, defined in `self.accounts`. Time period bounded using `self.start_date` and `self.fin_date` properties. Limitation applied to original message publication timestamp. I.e., if post was published before `self.fin_date`, but got comment after this time, this comment will be collected. If bounds not specified - default values are used.
+  
+  Finnaly, returns dictionary object. Keys - the same as `.Connector().accounts` dict keys. Values -- list of comments to messages on person's/page's wall (in timeline) -- possibly empty.
   Every list element is a dict with these keys:
 
     ```python
@@ -227,15 +234,56 @@ List of functions-properties:
          'text'       :STRING
         }
     ```
+    
+    - id - Network-specific unique comment id. Used to identify comment.
+    
+    - link - URL of 'original' message with current comment highlighted.
+    
+    - date - `datetime` object - time, when the comment was written. By default current machine time zone used (not UTC).
+    
+    - in_reply_to - `id` of message (`status`) the comment was written to. Used to connect comments and messages.
+    
+    - author_id - `id` of the user, who wrote the comment. Could be used to collect additional data about him.
+    
+    - text - text of the comment, cleaned from html tags and any media data.
 
-## Functions
+* .Connector().**statuses_with_comments()**
 
-Every connector, based on BaseConnector required to have these functions:
+  Checks, whether author messages and comments to them already collected, or not. If not - tries to collect the data, using `self._get_statuses(**kargv)` and `self._get_comments(**kargv)` functions. Collects data for every user, defined in `self.accounts`. Time period bounded using `self.start_date` and `self.fin_date` properties. Limitation applied to original message publication timestamp.
+  
+  Finnaly, breaks comments by `in_reply_to` field and adds list of comments to every particular post. Returns dict object. Keys - the same as `.Connector().accounts` dict keys. Values -- list of messages (statuses/posts/tweets) on person's/page's wall (in timeline). Every message has list of related comments -- as one additional field. Every message is a dict with same as `self.statuses()` element keys with one additioanl field - 'comments' - that is a flat list of all realted to the post comments.
+  
+     ```python
+        {
+         'id'      :STRING,
+         'link'    :STRING,
+         'date'    :DATETIME,
+         'reposts' :INT,
+         'replies' :INT,
+         'likes'   :INT,
+         'text'    :STRING,
+         'comments':LIST(comments_to_the_message)
+        }
+    ``` 
 
-- `get_profiles()`;
+## Other
 
-- `get_statuse()`;
+Some of described functions has specific optional parameters. Most of them concern concrete media platforms. Find out more about connectors you are interested in:
 
-- `get_comments()`;
+* [Facebook connector](/smapy/docs/facebook_connector/)
 
-- `check_token()`.
+* [Twitter connector](/smapy/docs/twitter_connector/)
+
+* [GooglePlus connector](/smapy/docs/googleplus_connector/)
+
+* [YouTube connector](/smapy/docs/youtube_connector/)
+
+* [Instagram connector](/smapy/docs/instagram_connector/)
+
+* [LiveJournal connector](/smapy/docs/livejournal_connector/)
+
+* [VKontakte connector](/smapy/docs/vkontakte_connector/)
+
+* [Odnoklassniki connector](/smapy/docs/odnoklassniki_connector/)
+
+Besides this, every connector has a bunch of "hidden" properties and functions. Find out more about them on [writing your own connector](/smapy/docs/new_connector/) page.
