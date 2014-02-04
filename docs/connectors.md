@@ -9,32 +9,88 @@ Most of the popular social media services have APIs (application programming int
 
 The main purpose of connectors - is to build a high-level meta-API wrapper, and to bring to network data required similarity. There is no need to care about how alike concepts are called in different networks (i.e. "tweet" in Twitter, "status" in Facebook, or "post" in Livejournal), and what exactly endpoints you should use. Also connectors keep track of rate limits and handle errors and exceptions.
 
-Connectors output standardized pieces of data, that could be used "as is", or processed to more complex models.
+Connectors output standardized pieces of data, that could be used "as is", or processed to more complex models, or saved in suitable form using exporters.
 
-## Aviable connectors
+## Aviable connectors and time rates for base data pieces
 
-| Time rates*                                                 | .profiles() | .statuses() | .comments() |
-|-------------------------------------------------------------|-------------|-------------|-------------|
-| [Facebook connector](/smapy/docs/facebook_connector/)       |  50         | 750         |  2500       |
-| [Twitter connector](/smapy/docs/twitter_connector/)         |  1000       | 1000        |  1000       |
-| [GooglePlus connector](/smapy/docs/googleplus_connector/)   |  100        | 1000        |  2000       |
-| [YouTube connector](/smapy/docs/youtube_connector/)         |  50         | 400         |  700        |
-| [Instagram connector](/smapy/docs/instagram_connector/)     |  100        | 500         |  2000       |
-| [LiveJournal connector](/smapy/docs/livejournal_connector/) |  30         | 10          |  40         |
-| [VKontakte connector](/smapy/docs/vkontakte_connector/)     |  50         | 3000        |  5000       |
+Every connector is a class, that inherits from `smapy.connectors.BaseConnector()`. This is done for maximal similarity. The only pieces, implemented individually in every conncetor concern low-level API interactions.
+
+| name and detailed description                               | class propierty                  | .profiles() | .statuses() | .comments() |
+|-------------------------------------------------------------|----------------------------------|-------------|-------------|-------------|
+| [Facebook connector](/smapy/docs/facebook_connector/)       | `smapy.connectors.Facebook()`    |  50         | 750         |  2500       |
+| [Twitter connector](/smapy/docs/twitter_connector/)         | `smapy.connectors.Twitter()`     |  1000       | 1000        |  1000       |
+| [GooglePlus connector](/smapy/docs/googleplus_connector/)   | `smapy.connectors.GooglePlus()`  |  100        | 1000        |  2000       |
+| [YouTube connector](/smapy/docs/youtube_connector/)         | `smapy.connectors.YouTube()`     |  50         | 400         |  700        |
+| [Instagram connector](/smapy/docs/instagram_connector/)     | `smapy.connectors.Instagram()`   |  100        | 500         |  2000       |
+| [LiveJournal connector](/smapy/docs/livejournal_connector/) | `smapy.connectors.LiveJournal()` |  30         | 10          |  40         |
+| [VKontakte connector](/smapy/docs/vkontakte_connector/)     | `smapy.connectors.VKontakte()`   |  50         | 3000        |  5000       |
 
 \* Time costs evaluated in average number of collected instances per 1 minute.
 
-## Properties
+## smapy.Connection(_net_) class
 
-* **accounts**
-  
-  Dictionary object. Keys - 'real' users' names, values - their nicknames or ids in specified network.
+Every connector could be imported from `smapy.connectors` package. I.e.:
 
-* **network**
+```python
+>>> from smapy.connectors import LiveJournal
+>>> lj_stat = LiveJournal()
+>>> lj_stat.accounts = ['tema', 'drugoi', 'zyalt']
+>>> lj_stat.profiles()
+{'drugoi': {'followers': 78984,
+            'id': 'drugoi',
+            'link': 'http://users.livejournal.com/drugoi/',
+            'name': u'Журнал Другого',
+            'nickname': 'drugoi',
+            'statuses': u'14519',
+            'type': 'person'},
+ 'tema': {'followers': 77734,
+          'id': 'tema',
+          'link': 'http://users.livejournal.com/tema/',
+          'name': u'мы приготовили для Вас приятное напоминание о теплом лете, Бабочку держатель с оживляющим эффектом.',
+          'nickname': 'tema',
+          'statuses': u'6137',
+          'type': 'person'},
+ 'zyalt': {'followers': 62946,
+           'id': 'zyalt',
+           'link': 'http://users.livejournal.com/zyalt/',
+           'name': u'Шик и великолепие!',
+           'nickname': 'zyalt',
+           'statuses': u'3780',
+           'type': 'person'}}
+```
 
-  Two-letter abbreviation, unique for every network:
-  
+But when you often switch between multiple connectors - it's easier to use universal `Connection(net)` class. This class returns initialised connector to social media channel, specified using _net_ parameter. `net` - is a two-letter abbreviation, unique for every registered in smapy.CONNECTORS connector. The above example with the same result, using `Connection(net)` class:
+
+```python
+>>> from smapy import Connection
+>>> lj_stat = Connection('lj')
+>>> lj_stat.accounts = ['tema', 'drugoi', 'zyalt']
+>>> lj_stat.profiles()
+{'drugoi': {'followers': 78984,
+            'id': 'drugoi',
+            'link': 'http://users.livejournal.com/drugoi/',
+            'name': u'Журнал Другого',
+            'nickname': 'drugoi',
+            'statuses': u'14519',
+            'type': 'person'},
+ 'tema': {'followers': 77734,
+          'id': 'tema',
+          'link': 'http://users.livejournal.com/tema/',
+          'name': u'мы приготовили для Вас приятное напоминание о теплом лете, Бабочку держатель с оживляющим эффектом.',
+          'nickname': 'tema',
+          'statuses': u'6137',
+          'type': 'person'},
+ 'zyalt': {'followers': 62946,
+           'id': 'zyalt',
+           'link': 'http://users.livejournal.com/zyalt/',
+           'name': u'Шик и великолепие!',
+           'nickname': 'zyalt',
+           'statuses': u'3780',
+           'type': 'person'}}
+```
+
+List of avaliable connectors (already registered) with two-letter abbreviation:
+
     - `tw` - Twitter
     
     - `fb` - Facebook
@@ -48,6 +104,52 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
     - `vk` - VKontakte
     
     - `yt` - YouTube
+
+## Documentation
+
+Every connector is to be unified with others. So there are quite a few differences between them, and that differences concern optional parameters. So here abstract connector will be described. IRL substitute `smapy.connectors.Connector()` with appropriate connector (i.e., `smapy.connectors.Twitter()`, `smapy.connectors.Facebook()`) or `smapy.Connection(net)` object.
+
+## Properties
+
+* .Connector().**network** and .Connector().**name**
+
+  (1) Two-letter abbreviation, unique for every network, and (2) full name of the network, connector used for. These propiertes are avaliable before connector initialisation and unchangeable. These properties are used to register connector in smapy.CONNECTORS agregator.
+  
+  *Example:*
+  
+  ```python
+  >>> from smapy.connectors import GooglePlus
+  >>> GooglePlus.network
+  u'gp'
+  >>> GooglePlus.name
+  u'Google+'
+  ```
+
+* **accounts**
+
+  Propierty created on connector initialization. By default it is an epty dict object. `.Connector().accounts()` stores user names to work with. Dict type is used to make it possible to use user-comfortable names as keys, and specific network nicknames or ids as values.
+  
+  It is possible to assign to `.Connector().accounts()` not only dict, but also list, set, tuple, or string object. On assigning they will be converted to dict: in case of list-like objects every element would be both key and value, in case of string (or unicode, or int) - dict with one key-value pair would be created.
+  
+  Reassigning `.Connector().accounts()` on initialised connector deletes all previously collected data (profiles, statuses, comments, etc.).
+  
+  *Example:*
+  
+  ```python
+  >>> from smapy.connectors import Twitter
+  >>> twit_stat = Twitter()
+  >>> twit_stat.accounts
+  {}
+  >>> twit_stat.accounts = {'RIA Novosti':'rianru', 'The Moscow News':'themoscownews'}
+  >>> twit_stat.accounts
+  {'RIA Novosti': 'rian', 'The Moscow News': 'themoscownews'}
+  >>> twit_stat.accounts = ['rianru', 'themoscownews']
+  >>> twit_stat.accounts
+  {'rianru': 'rianru', 'themoscownews': 'themoscownews'}
+  >>> twit_stat.accounts = 'rianru'
+  >>> twit_stat.accounts
+  {u'rianru': u'rianru'}
+  ```
 
 * **token**
 
