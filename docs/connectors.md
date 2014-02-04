@@ -140,9 +140,10 @@ Every connector is to be unified with others. So there are quite a few differenc
 
 * .Connector().**start_date** and .Connector().**fin_date**
 
-  This is `datetime`-properties, pointing to timestamp from (start_date) and to (fin_date) which posts and comments are being collected. These dates are used to bound statuses and comments collecting period. If not specified, default values used:
+  This is `datetime`-properties, pointing to timestamp from (start&#95;date) and to (fin&#95;date) which posts and comments are being collected. These dates are used to bound statuses and comments collecting period. If not specified, default values used:
   
   - January, 1 1990 for start_date
+
   - `datetime.datetime.now()` (current local date and time) for fin_date
 
   Reassigning `.Connector().start_date` or `.Connector().fin_date` on initialised connector deletes previously collected statuses and comments.
@@ -241,13 +242,13 @@ Every connector is to be unified with others. So there are quite a few differenc
     
     - date - `datetime` object - time, when the comment was written. By default current machine time zone used (not UTC).
     
-    - in_reply_to - `id` of message (`status`) the comment was written to. Used to connect comments and messages.
+    - in&#95;reply&#95;to - `id` of message (`status`) the comment was written to. Used to connect comments and messages.
     
     - author_id - `id` of the user, who wrote the comment. Could be used to collect additional data about him.
     
     - text - text of the comment, cleaned from html tags and any media data.
 
-* .Connector().**statuses_with_comments()**
+* .Connector().**statuses&#95;with&#95;comments()**
 
   Checks, whether author messages and comments to them already collected, or not. If not - tries to collect the data, using `self._get_statuses(**kargv)` and `self._get_comments(**kargv)` functions. Collects data for every user, defined in `self.accounts`. Time period bounded using `self.start_date` and `self.fin_date` properties. Limitation applied to original message publication timestamp.
   
