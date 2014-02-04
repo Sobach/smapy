@@ -15,15 +15,15 @@ Connectors output standardized pieces of data, that could be used "as is", or pr
 
 Every connector is a class, that inherits from `smapy.connectors.BaseConnector()`. This is done for maximal similarity. The only pieces, implemented individually in every conncetor concern low-level API interactions.
 
-| name and detailed description                               | class propierty                  | .profiles() | .statuses() | .comments() |
-|-------------------------------------------------------------|----------------------------------|-------------|-------------|-------------|
-| [Facebook connector](/smapy/docs/facebook_connector/)       | `smapy.connectors.Facebook()`    |  50         | 750         |  2500       |
-| [Twitter connector](/smapy/docs/twitter_connector/)         | `smapy.connectors.Twitter()`     |  1000       | 1000        |  1000       |
-| [GooglePlus connector](/smapy/docs/googleplus_connector/)   | `smapy.connectors.GooglePlus()`  |  100        | 1000        |  2000       |
-| [YouTube connector](/smapy/docs/youtube_connector/)         | `smapy.connectors.YouTube()`     |  50         | 400         |  700        |
-| [Instagram connector](/smapy/docs/instagram_connector/)     | `smapy.connectors.Instagram()`   |  100        | 500         |  2000       |
-| [LiveJournal connector](/smapy/docs/livejournal_connector/) | `smapy.connectors.LiveJournal()` |  30         | 10          |  40         |
-| [VKontakte connector](/smapy/docs/vkontakte_connector/)     | `smapy.connectors.VKontakte()`   |  50         | 3000        |  5000       |
+| class propierty                                                        | .profiles() | .statuses() | .comments() |
+|------------------------------------------------------------------------|-------------|-------------|-------------|
+| [`smapy.connectors.Facebook()`](/smapy/docs/facebook_connector/)       |  50         | 750         |  2500       |
+| [`smapy.connectors.Twitter()`](/smapy/docs/twitter_connector/)         |  1000       | 1000        |  1000       |
+| [`smapy.connectors.GooglePlus()`](/smapy/docs/googleplus_connector/)   |  100        | 1000        |  2000       |
+| [`smapy.connectors.YouTube()`](/smapy/docs/youtube_connector/)         |  50         | 400         |  700        |
+| [`smapy.connectors.Instagram()`](/smapy/docs/instagram_connector/)     |  100        | 500         |  2000       |
+| [`smapy.connectors.LiveJournal()`](/smapy/docs/livejournal_connector/) |  30         | 10          |  40         |
+| [`smapy.connectors.VKontakte()`](/smapy/docs/vkontakte_connector/)     |  50         | 3000        |  5000       |
 
 \* Time costs evaluated in average number of collected instances per 1 minute.
 
@@ -34,7 +34,7 @@ Every connector could be imported from `smapy.connectors` package. I.e.:
 ```python
 >>> from smapy.connectors import LiveJournal
 >>> lj_stat = LiveJournal()
->>> lj_stat.accounts = ['tema', 'drugoi', 'zyalt']
+>>> lj_stat.accounts = 'drugoi'
 >>> lj_stat.profiles()
 {'drugoi': {'followers': 78984,
             'id': 'drugoi',
@@ -42,21 +42,7 @@ Every connector could be imported from `smapy.connectors` package. I.e.:
             'name': u'Журнал Другого',
             'nickname': 'drugoi',
             'statuses': u'14519',
-            'type': 'person'},
- 'tema': {'followers': 77734,
-          'id': 'tema',
-          'link': 'http://users.livejournal.com/tema/',
-          'name': u'мы приготовили для Вас приятное напоминание о теплом лете, Бабочку держатель с оживляющим эффектом.',
-          'nickname': 'tema',
-          'statuses': u'6137',
-          'type': 'person'},
- 'zyalt': {'followers': 62946,
-           'id': 'zyalt',
-           'link': 'http://users.livejournal.com/zyalt/',
-           'name': u'Шик и великолепие!',
-           'nickname': 'zyalt',
-           'statuses': u'3780',
-           'type': 'person'}}
+            'type': 'person'}}
 ```
 
 But when you often switch between multiple connectors - it's easier to use universal `Connection(net)` class. This class returns initialised connector to social media channel, specified using _net_ parameter. `net` - is a two-letter abbreviation, unique for every registered in smapy.CONNECTORS connector. The above example with the same result, using `Connection(net)` class:
@@ -64,7 +50,7 @@ But when you often switch between multiple connectors - it's easier to use unive
 ```python
 >>> from smapy import Connection
 >>> lj_stat = Connection('lj')
->>> lj_stat.accounts = ['tema', 'drugoi', 'zyalt']
+>>> lj_stat.accounts = 'drugoi'
 >>> lj_stat.profiles()
 {'drugoi': {'followers': 78984,
             'id': 'drugoi',
@@ -72,44 +58,27 @@ But when you often switch between multiple connectors - it's easier to use unive
             'name': u'Журнал Другого',
             'nickname': 'drugoi',
             'statuses': u'14519',
-            'type': 'person'},
- 'tema': {'followers': 77734,
-          'id': 'tema',
-          'link': 'http://users.livejournal.com/tema/',
-          'name': u'мы приготовили для Вас приятное напоминание о теплом лете, Бабочку держатель с оживляющим эффектом.',
-          'nickname': 'tema',
-          'statuses': u'6137',
-          'type': 'person'},
- 'zyalt': {'followers': 62946,
-           'id': 'zyalt',
-           'link': 'http://users.livejournal.com/zyalt/',
-           'name': u'Шик и великолепие!',
-           'nickname': 'zyalt',
-           'statuses': u'3780',
-           'type': 'person'}}
+            'type': 'person'}}
 ```
 
-List of avaliable connectors (already registered) with two-letter abbreviation:
+List of avaliable connectors (already registered) with two-letter abbreviation (`.Connector().network` property):
 
-    - `tw` - Twitter
-    
-    - `fb` - Facebook
-    
-    - `gp` - Google+
-    
-    - `ig` - Instagram
-    
-    - `lj` - LiveJournal
-    
-    - `vk` - VKontakte
-    
-    - `yt` - YouTube
+| Network       | .Connector().network | .Connector().name |
+|---------------|----------------------|-------------------|
+| Twitter       | `tw`                 | `Twitter`         |
+| Facebook      | `fb`                 | `Facebook`        |
+| GooglePlus    | `gp`                 | `Google+`         |
+| Instagram     | `ig`                 | `Instagram`       |
+| LiveJournal   | `lj`                 | `LiveJournal`     |
+| VKontakte     | `vk`                 | `ВКонтакте`       |
+| YouTube       | `yt`                 | `YouTube`         |
+| Odnoklassniki | `ok`                 | `Одноклассники`   |
 
 ## Documentation
 
 Every connector is to be unified with others. So there are quite a few differences between them, and that differences concern optional parameters. So here abstract connector will be described. IRL substitute `smapy.connectors.Connector()` with appropriate connector (i.e., `smapy.connectors.Twitter()`, `smapy.connectors.Facebook()`) or `smapy.Connection(net)` object.
 
-## Properties
+### Properties
 
 * .Connector().**network** and .Connector().**name**
 
@@ -153,8 +122,7 @@ Every connector is to be unified with others. So there are quite a few differenc
 
 * **token**
 
-  Access token to make requests to network's API. Not required for some networks (i.e. Livejournal). Read more about how to get tokens to different networks:
-  
+  Access token to make requests to network's API. Not required for some networks (i.e. Livejournal). When working with smapy or any other program - you need to register it on media developers page, authenticate and authorise, and finnaly get access token. Without token most part of the data would be closed. To make the process easier we wrote how-to's for several networks: 
   * [Facebook token](/smapy/docs/facebook_token/)
 
   * [Twitter token](/smapy/docs/twitter_token/)
@@ -166,6 +134,8 @@ Every connector is to be unified with others. So there are quite a few differenc
   * [VKontakte token](/smapy/docs/vkontakte_token/)
 
   * [Odnoklassniki token](/smapy/docs/odnoklassniki_token/)
+
+  Follow them once to get your own access token for network(s), you are interested in. Then you can store your keys, using [`smapy.KeyChain()`](/smapy/docs/keychain/) class object.
 
 * **start_date**
 
