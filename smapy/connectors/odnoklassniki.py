@@ -42,7 +42,7 @@ class OdnoklassnikiConnector(BaseConnector):
         print params
 
     @need_token
-    def get_profiles(self, token, **kargv):
+    def _get_profiles(self, token, **kargv):
         logging.warning(u'OK: Number of followers only avaliable for pages (and groups).')
         step = 90
         retdict = {}
@@ -97,12 +97,12 @@ class OdnoklassnikiConnector(BaseConnector):
 
     @check_dates
     @need_token
-    def get_statuses(self, start_date, fin_date, token, **kargv):
+    def _get_statuses(self, start_date, fin_date, token, **kargv):
         logging.error(u'OK: Statuses collection not implemented yet.')
         return BaseConnector.get_statuses(self, **kargv)
 
     @check_dates
     @need_token
-    def get_comments(self, start_date, fin_date, token, **kargv):
+    def _get_comments(self, start_date, fin_date, token, **kargv):
         logging.error(u'OK: Comments collection not implemented yet.')
         return BaseConnector.get_comments(self, **kargv)

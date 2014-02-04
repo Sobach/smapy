@@ -34,7 +34,7 @@ class TwitterConnector(BaseConnector):
         return True
 
     @need_token
-    def get_profiles(self, token, **kargv):
+    def _get_profiles(self, token, **kargv):
         step = 80
         api_dict = {}
         for i in range(0, len(self.accounts.values()), step):
@@ -47,7 +47,8 @@ class TwitterConnector(BaseConnector):
                     'nickname':element['screen_name'],
                     'name':element['name'],
                     'link':'https://www.twitter.com/{}'.format(element['screen_name']),
-                    'followers':element['followers_count']
+                    'followers':element['followers_count'],
+                    'type':'person'
                     }
             time.sleep(5)
 
@@ -64,7 +65,7 @@ class TwitterConnector(BaseConnector):
 
     @check_dates
     @need_token
-    def get_statuses(self, start_date, fin_date, token, by_author_only = True, count_replies = True, **kargv):
+    def _get_statuses(self, start_date, fin_date, token, by_author_only = True, count_replies = True, **kargv):
         method = 'statuses/user_timeline'
         retdict = {}
         userlist = self._users_list()
@@ -86,11 +87,15 @@ class TwitterConnector(BaseConnector):
                 for status in home_timeline:
                     twidate = datetime.datetime.strptime(status['created_at'], '%a %b %d %H:%M:%S +0000 %Y') + datetime.timedelta(seconds=TIME_OFFSET)
                     if twidate >= start_date and twidate <= fin_date:
+                        try:
+                            likes_count = int(status['favorite_count'])
+                        except KeyError:
+                            likes_count = 0
                         posts.append({
                             'date':twidate,
                             'id':status['id_str'],
                             'link':'http://www.twitter.com/{}/status/{}'.format(self.accounts[user], status['id_str']),
-                            'likes':0,
+                            'likes':likes_count,
                             'reposts':status['retweet_count'],
                             'replies':0,
                             'text':status['text']
@@ -110,7 +115,7 @@ class TwitterConnector(BaseConnector):
 
     @check_dates
     @need_token
-    def get_comments(self, start_date, fin_date, token, **kargv):
+    def _get_comments(self, start_date, fin_date, token, **kargv):
         method = 'search/tweets'
         retdict = {}
         userlist = self._users_list()

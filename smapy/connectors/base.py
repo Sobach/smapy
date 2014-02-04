@@ -89,9 +89,9 @@ def check_dates(func):
 class BaseConnector():
     """Base connector class
 Every connector, based on it required to have these functions:
-    * get_profiles()
-    * get_statuse()
-    * get_comments()
+    * _get_profiles()
+    * _get_statuse()
+    * _get_comments()
     * _token_checker()"""
 
     def __init__(self, accounts = {}, **kargv):
@@ -122,7 +122,7 @@ Every connector, based on it required to have these functions:
         try:
             return self._profiles
         except AttributeError:
-            data = self.get_profiles(**kargv)
+            data = self._get_profiles(**kargv)
             if data:
                 self._profiles = data
                 return self._profiles
@@ -133,7 +133,7 @@ Every connector, based on it required to have these functions:
         try:
             return self._statuses
         except AttributeError:
-            data = self.get_statuses(**kargv)
+            data = self._get_statuses(**kargv)
             if data:
                 self._statuses = {user:check_dublicates_complete(statuses) for (user, statuses) in data.items()}
                 return self._statuses
@@ -144,7 +144,7 @@ Every connector, based on it required to have these functions:
         try:
             return self._comments
         except AttributeError:
-            data = self.get_comments(**kargv)
+            data = self._get_comments(**kargv)
             if data:
                 self._comments = {user:check_dublicates_complete(comments) for (user, comments) in data.items()}
                 return self._comments
@@ -217,6 +217,9 @@ Every connector, based on it required to have these functions:
                 logging.critical(u'{}: You can\'t assign {} to accounts.'.format(self.network.upper(), str(value.__class__)))
                 do_assign = False
 
+        # Don't reassign network and name parameters
+        if name == 'name' or name == 'network':
+            do_assign = False
 
         if do_assign:
             self.__dict__[name] = value
@@ -225,14 +228,14 @@ Every connector, based on it required to have these functions:
         logging.warning(u'{}: There is no network-specific token checker.'.format(self.network.upper()))
         return False
 
-    def get_profiles(self, **kargv):
+    def _get_profiles(self, **kargv):
         logging.warning(u'{}: Profiles collector not specified.'.format(self.network.upper()))
         return {acc:None for acc in self.accounts.keys()}
 
-    def get_statuses(self, **kargv):
+    def _get_statuses(self, **kargv):
         logging.warning(u'{}: Statuses collector not specified.'.format(self.network.upper()))
         return {acc:[] for acc in self.accounts.keys()}
 
-    def get_comments(self, **kargv):
+    def _get_comments(self, **kargv):
         logging.warning(u'{}: Comments collector not specified.'.format(self.network.upper()))
         return {acc:[] for acc in self.accounts.keys()}

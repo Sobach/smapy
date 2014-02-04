@@ -32,7 +32,7 @@ class FacebookConnector(BaseConnector):
         return False
 
     @need_token
-    def get_profiles(self, token, **kargv):
+    def _get_profiles(self, token, **kargv):
         retdict = {}
         for user in self.accounts.keys():
             udict = {
@@ -76,7 +76,7 @@ class FacebookConnector(BaseConnector):
 
     @check_dates
     @need_token
-    def get_statuses(self, start_date, fin_date, token, count_replies = True, count_likes = True, **kargv):
+    def _get_statuses(self, start_date, fin_date, token, count_replies = True, count_likes = True, **kargv):
         if not count_replies:
             logging.warning(u'FB: Number of comments per status is not collected.')
         if not count_likes:
@@ -173,8 +173,8 @@ class FacebookConnector(BaseConnector):
 
     @check_dates
     @need_token
-    def get_comments(self, start_date, fin_date, token, **kargv):
-        self.get_statuses(start_date = start_date, fin_date = fin_date, token = token, count_replies = True, count_likes = False)
+    def _get_comments(self, start_date, fin_date, token, **kargv):
+        self._get_statuses(start_date = start_date, fin_date = fin_date, token = token, count_replies = True, count_likes = False)
         return self._comments
 
     def __add_comments(self, url):

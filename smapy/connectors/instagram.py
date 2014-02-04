@@ -29,7 +29,7 @@ class InstagramConnector(BaseConnector):
         return True
 
     @need_token
-    def get_profiles(self, token, **kargv):
+    def _get_profiles(self, token, **kargv):
         retdict = {}
         for user in self.accounts.keys():
             url = 'https://api.instagram.com/v1/users/search?q={}&access_token={}'.format(self.accounts[user], token)
@@ -58,7 +58,8 @@ class InstagramConnector(BaseConnector):
                 'nickname':self.accounts[user],
                 'name':userinfo['data']['full_name'],
                 'link':'http://instagram.com/{}'.format(self.accounts[user]),
-                'followers':int(userinfo['data']['counts']['followed_by'])
+                'followers':int(userinfo['data']['counts']['followed_by']),
+                'type':'person'
                 }
             logging.info(u'IG: Personal info for {} (id: {}) collected'.format(user, self.accounts[user]))
         return retdict
@@ -66,7 +67,7 @@ class InstagramConnector(BaseConnector):
     @check_dates
     @need_token
     @need_profiles
-    def get_statuses(self, start_date, fin_date, token, **kargv):
+    def _get_statuses(self, start_date, fin_date, token, **kargv):
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])
@@ -104,7 +105,7 @@ class InstagramConnector(BaseConnector):
     @check_dates
     @need_token
     @need_statuses
-    def get_comments(self, start_date, fin_date, token, **kargv):
+    def _get_comments(self, start_date, fin_date, token, **kargv):
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])

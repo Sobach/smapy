@@ -25,7 +25,7 @@ class LiveJournalConnector(BaseConnector):
     def check_token(self):
         return True
 
-    def get_profiles(self, **kargv):
+    def _get_profiles(self, **kargv):
         retdict = {}
         for user in self.accounts.keys():
             url = 'http://users.livejournal.com/{}/profile'.format(self.accounts[user].replace('-', '_'))
@@ -81,7 +81,7 @@ class LiveJournalConnector(BaseConnector):
         return retdict
 
     @check_dates
-    def get_statuses(self, start_date, fin_date, get_replies = True, **kargv):
+    def _get_statuses(self, start_date, fin_date, get_replies = True, **kargv):
         if get_replies:
             self._comments = {user:[] for user in self.accounts.keys()}
         retdict = {}
@@ -157,11 +157,11 @@ class LiveJournalConnector(BaseConnector):
         return retdict
 
     @check_dates
-    def get_comments(self, start_date, fin_date, **kargv):
+    def _get_comments(self, start_date, fin_date, **kargv):
         try:
             return self._comments
         except AttributeError:
-            self.get_statuses(start_date = start_date, fin_date = fin_date, get_replies = True)
+            self._get_statuses(start_date = start_date, fin_date = fin_date, get_replies = True)
             return self._comments
 
     def __html_comments_pager__(self, tree):

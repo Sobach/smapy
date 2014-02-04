@@ -26,7 +26,7 @@ class YouTubeConnector(BaseConnector):
         return True
 
     @need_token
-    def get_profiles(self, token, **kargv):
+    def _get_profiles(self, token, **kargv):
         retdict = {}
         for user in self.accounts.keys():
             url =  'https://www.googleapis.com/youtube/v3/search?part=id,snippet&q={0}&type=channel&key={1}'.format(self.accounts[user], token)
@@ -52,7 +52,8 @@ class YouTubeConnector(BaseConnector):
                         'nickname':item['snippet']['channelTitle'],
                         'name':item['snippet']['title'],
                         'link':'http://www.youtube.com/{}'.format(item['snippet']['channelTitle']),
-                        'followers':int(prof_data['items'][0]['statistics']['subscriberCount'])
+                        'followers':int(prof_data['items'][0]['statistics']['subscriberCount']),
+                        'type':'person'
                         }
                     logging.info(u'YT: Personal info for {} collected'.format(user))
                     break
@@ -65,7 +66,7 @@ class YouTubeConnector(BaseConnector):
     @need_token
     @need_profiles
     @check_dates
-    def get_statuses(self, token, start_date, fin_date, slowmo = 0, **kargv):
+    def _get_statuses(self, token, start_date, fin_date, slowmo = 0, **kargv):
         userlist = self._users_list()
         retdict = userlist[1]
         for user in userlist[0]:
@@ -126,7 +127,7 @@ class YouTubeConnector(BaseConnector):
     @check_dates
     @need_token
     @need_statuses
-    def get_comments(self, token, start_date, fin_date, **kargv):
+    def _get_comments(self, token, start_date, fin_date, **kargv):
         userlist = self._users_list()
         retdict = userlist[1]
         for user in userlist[0]:

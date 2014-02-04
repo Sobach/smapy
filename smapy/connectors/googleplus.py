@@ -28,7 +28,7 @@ class GooglePlusConnector(BaseConnector):
         return True
 
     @need_token
-    def get_profiles(self, token, **kargv):
+    def _get_profiles(self, token, **kargv):
         retdict = {}
         logging.warning(u'GP: Number of followers only avaliable for pages (not persons) that made this info public.')
         for user in self.accounts.keys():
@@ -79,7 +79,7 @@ class GooglePlusConnector(BaseConnector):
     @check_dates
     @need_token
     @need_profiles
-    def get_statuses(self, start_date, token, fin_date, **kargv):
+    def _get_statuses(self, start_date, token, fin_date, **kargv):
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])
@@ -129,7 +129,7 @@ class GooglePlusConnector(BaseConnector):
     @check_dates
     @need_token
     @need_statuses
-    def get_comments(self, token, start_date, fin_date, **kargv):
+    def _get_comments(self, token, start_date, fin_date, **kargv):
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])

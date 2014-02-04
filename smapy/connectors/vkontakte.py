@@ -26,7 +26,7 @@ class VKontakteConnector(BaseConnector):
         return False
 
     @need_token
-    def get_profiles(self, token, **kargv):
+    def _get_profiles(self, token, **kargv):
         retdict = {}
         for user in self.accounts.keys():
             udict = {
@@ -64,7 +64,7 @@ class VKontakteConnector(BaseConnector):
     @check_dates
     @need_token
     @need_profiles
-    def get_statuses(self, start_date, fin_date, token, by_author_only = True, **kargv):
+    def _get_statuses(self, start_date, fin_date, token, by_author_only = True, **kargv):
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])
@@ -114,7 +114,7 @@ class VKontakteConnector(BaseConnector):
     @need_token
     @need_profiles
     @need_statuses
-    def get_comments(self, start_date, fin_date, token, **kargv):
+    def _get_comments(self, start_date, fin_date, token, **kargv):
         retdict = {}
         userlist = self._users_list()
         retdict.update(userlist[1])
