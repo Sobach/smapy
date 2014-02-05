@@ -79,9 +79,9 @@ List of avaliable connectors (already registered) with two-letter abbreviation (
 
 Every connector is to be unified with others. So there are quite a few differences between them, and that differences concern optional parameters. So here abstract connector will be described. IRL substitute `smapy.connectors.Connector()` with appropriate connector (i.e., `smapy.connectors.Twitter()`, `smapy.connectors.Facebook()`) or `smapy.Connection(net)` object.
 
-### Properties
+### Public properties
 
-* .Connector().**network** and .Connector().**name**
+* **network** and **name**
 
   (1) Two-letter abbreviation, unique for every network, and (2) full name of the network, connector used for. These propiertes are avaliable before connector initialisation and unchangeable. These properties are used to register connector in smapy.CONNECTORS agregator.
   
@@ -95,7 +95,7 @@ Every connector is to be unified with others. So there are quite a few differenc
   u'Google+'
   ```
 
-* .Connector().**accounts**
+* **accounts**
 
   Propierty created on connector initialization. By default it is an epty dict object. `.Connector().accounts` stores user names to work with. Dict type is used to make it possible to use user-comfortable names as keys, and specific network nicknames or ids as values.
   
@@ -121,7 +121,7 @@ Every connector is to be unified with others. So there are quite a few differenc
   {u'rianru': u'rianru'}
   ```
 
-* .Connector().**token**
+* **token**
 
   Access token to make requests to network's API. Not required for some networks (i.e. Livejournal). When working with smapy or any other program - you need to register it on media developers page, authenticate and authorise, and finnaly get access token. Without token most part of the data would be closed. To make the process easier we wrote how-to's for several networks: 
   * [Facebook token](/smapy/docs/facebook_token/)
@@ -138,7 +138,7 @@ Every connector is to be unified with others. So there are quite a few differenc
 
   Follow them once to get your own access token for network(s), you are interested in. Then you can store your keys, using [`smapy.KeyChain()`](/smapy/docs/keychain/) class object.
 
-* .Connector().**start_date** and .Connector().**fin_date**
+* **start_date** and **fin_date**
 
   This is `datetime`-properties, pointing to timestamp from (start&#95;date) and to (fin&#95;date) which posts and comments are being collected. These dates are used to bound statuses and comments collecting period. If not specified, default values used:
   
@@ -149,13 +149,13 @@ Every connector is to be unified with others. So there are quite a few differenc
   Reassigning `.Connector().start_date` or `.Connector().fin_date` on initialised connector deletes previously collected statuses and comments.
 
 
-### Functions
+### Public methods
 
-* .Connector().**check_token()**
+* **check_token**(**kargv)
 
   Tries to make test request to appropriate social media to check validity of `self.token` property. Return `True` if access token is valid, otherwise -- `False`. Function, implemented in `smapy.connectors.base.BaseConnector()`, looks for `self.token` property, and then uses `self._token_checker()` function (specific for every connector class).
 
-* .Connector().**profiles()**
+* **profiles**(**kargv)
 
   Checks, whether profiles data already collected, or not. If not - tries to collect it, using `self._get_statuses(**kargv)` function - it is specific for every connector. Collects data for every user, defined in `self.accounts`.
   
@@ -185,7 +185,7 @@ Every connector is to be unified with others. So there are quite a few differenc
     
     - type - 'person' or 'page' - distinguishes personal user accounts and pages/groups/communities/events (all types of collective accounts, avaliable for specified network). In Twitter, YouTube, and Instagram `type` always equal to `person`. There is no different account types.
 
-* .Connector().**statuses()**
+* **statuses**(**kargv)
 
   Checks, whether posts (or statuses) data already collected, or not. If not - tries to collect it, using `self._get_profiles(**kargv)` function - it is specific for every connector. Collects data for every user, defined in `self.accounts`. Time period bounded using `self.start_date` and `self.fin_date` properties. If not specified - default values are used.
   
@@ -218,7 +218,7 @@ Every connector is to be unified with others. So there are quite a few differenc
     
     - text - text of the message, cleaned from html tags and any media data.
 
-* .Connector().**comments()**
+* **comments**(**kargv)
 
   Checks, whether comments to author messages already collected, or not. If not - tries to collect it, using `self._get_comments(**kargv)` function - it is specific for every connector. Collects data for every user, defined in `self.accounts`. Time period bounded using `self.start_date` and `self.fin_date` properties. Limitation applied to original message publication timestamp. I.e., if post was published before `self.fin_date`, but got comment after this time, this comment will be collected. If bounds not specified - default values are used.
   
@@ -248,7 +248,7 @@ Every connector is to be unified with others. So there are quite a few differenc
     
     - text - text of the comment, cleaned from html tags and any media data.
 
-* .Connector().**statuses&#95;with&#95;comments()**
+* **statuses&#95;with&#95;comments**(**kargv)
 
   Checks, whether author messages and comments to them already collected, or not. If not - tries to collect the data, using `self._get_statuses(**kargv)` and `self._get_comments(**kargv)` functions. Collects data for every user, defined in `self.accounts`. Time period bounded using `self.start_date` and `self.fin_date` properties. Limitation applied to original message publication timestamp.
   

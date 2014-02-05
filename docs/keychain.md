@@ -29,7 +29,7 @@ Read more on how to get tokens for different networks:
 
 _class_ smapy.**KeyChain()**
 
-Public methods:
+### Public methods:
 
 * **assign**(_net, token, validate = True, check = False_)
 
