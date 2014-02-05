@@ -129,7 +129,7 @@ class InstagramConnector(BaseConnector):
                             'text':element['text'],
                             'link':post['link'],
                             'date':datetime.datetime.fromtimestamp(float(element['created_time'])) + datetime.timedelta(seconds=TIME_OFFSET),
-                            'in_reply_to':post['id'],
+                            'parent':post['id'],
                             'author_id':element['from']['id']})
             retdict[user] = comments
             logging.info(u'IG: Comments statistics for {} (id/nick: {}) collected'.format(user, self.accounts[user]))

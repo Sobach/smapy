@@ -20,6 +20,10 @@ class TwitterConnector(BaseConnector):
     network = u'tw'
     name = u'Twitter'
 
+    def __init__(self, **kargv):
+        self.network = u'tw'
+        BaseConnector.__init__(self, **kargv)
+
     def _token_checker(self):
         if not isinstance(self.token, dict) or\
         set(['consumer_key','consumer_secret','access_token','access_secret']).difference(set(self.token.keys())):
@@ -139,7 +143,7 @@ class TwitterConnector(BaseConnector):
                             'id':tweet['id_str'],
                             'link':'http://www.twitter.com/{0}/status/{1}'.format(tweet['user']['screen_name'], tweet['id_str']),
                             'date':twidate,
-                            'in_reply_to':tweet['in_reply_to_status_id_str'],
+                            'parent':tweet['in_reply_to_status_id_str'],
                             'author_id':tweet['user']['id'],
                             'text':tweet['text']
                             })
@@ -173,7 +177,7 @@ class TwitterConnector(BaseConnector):
                 for i in range(len(statuses[user])):
                     com_count = 0
                     for comment in self._comments[user]:
-                        if comment['in_reply_to'] == statuses[user][i]['id']:
+                        if comment['parent'] == statuses[user][i]['id']:
                             com_count += 1
                     statuses[user][i]['replies'] = com_count
             else:

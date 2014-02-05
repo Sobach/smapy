@@ -43,10 +43,10 @@ class FacebookConnector(BaseConnector):
             udict = {
                 'nickname':self.accounts[user],
                 'link':'http://www.facebook.com/{0}'.format(self.accounts[user]),
-                'type':'unknown',
-                'followers':0
+                'type':None,
+                'followers':None,
             }
-            url = 'https://graph.facebook.com/{0}?access_token={1}'.\
+            url = 'https://graph.facebook.com/{0}?fields=picture.type(large),id,name,likes&access_token={1}'.\
                 format(self.accounts[user], token)
             info = get_json(url, get = True)
             if not info:
@@ -55,25 +55,56 @@ class FacebookConnector(BaseConnector):
                 continue
             udict['id'] = info['id']
             udict['name'] = info['name']
-            if 'likes' in info:
+            if 'likes' in info and not isinstance(info['likes'], dict):
                 udict['type'] = 'page'
                 udict['followers'] = int(info['likes'])
+                udict['friends'] = None
+                udict['following'] = None
             else:
                 url = 'https://graph.facebook.com/{0}/subscribers?access_token={1}'.format(udict['id'], token)
                 try:
                     subscr = int(get_json(url, get = True, noerrors = True)['summary']['total_count'])
                 except:
-                    subscr = 0
+                    subscr = None
                     logging.warning(u'FB: Exception while getting subscribers for {} (id: {}).'.format(user, udict['id']))
                 req = quote_plus('SELECT friend_count FROM user WHERE uid = {0}'.format(udict['id']))
                 url = 'https://graph.facebook.com/fql?q={0}&access_token={1}'.format(req, token)
                 try:
-                    fri = int(get_json(url, get = True, noerrors = True)['data'][0]['friend_count'])
-                except:
-                    fri = 0
+                    fri = int(get_json(url, get = True)['data'][0]['friend_count'])
+                except TypeError:
+                    fri = None
                     logging.warning(u'FB: Exception while getting friends for {} (id: {}).'.format(user, udict['id']))
                 udict['type'] = 'person'
-                udict['followers'] = subscr + fri
+                udict['friends'] = fri
+                if subscr and fri:
+                    udict['followers'] = subscr + fri
+                elif subscr:
+                    udict['followers'] = subscr
+                elif fri:
+                    udict['followers'] = fri
+                else:
+                    udict['followers'] = None
+                udict['following'] = 0
+                try:
+                    i = 0
+                    while True:
+                        req = quote_plus('SELECT target_id FROM connection WHERE source_id = {} LIMIT 100 OFFSET {}'.format(udict['id'], i))
+                        url = 'https://graph.facebook.com/fql?q={0}&access_token={1}'.format(req, token)
+                        new_following = len(get_json(url, get = True)['data'])
+                        if not new_following:
+                            break
+                        udict['following'] += new_following
+                        I+=100
+                except:
+                    logging.warning(u'FB: Exception while getting followings for {} (id: {}).'.format(user, udict['id']))
+                    udict['following'] = None
+
+            try:
+                udict['avatar_link'] = info['picture']['data']['url']
+                if info['picture']['data']['is_silhouette']:
+                    udict['avatar_link'] = None
+            except KeyError:
+                udict['avatar_link'] = None
             retdict[user] = udict
             logging.info(u'FB: Personal info for {} (id: {}) collected.'.format(user, udict['id']))
             sleep(1)
@@ -136,22 +167,22 @@ class FacebookConnector(BaseConnector):
                             if count_likes:
                                 likes = len(self.__add_likes('https://graph.facebook.com/{0}/likes?limit=100&access_token={1}'.format(post_id, token)))
                             else:
-                                likes = 0
+                                likes = None
 
                             try:
                                 shares = int(post['shares']['count'])
                             except:
-                                shares = 0
+                                shares = None
 
                             if count_replies:
                                 com_data = self.__add_comments('https://graph.facebook.com/{0}/comments?limit=100&filter=stream&access_token={1}'.format(post_id, token))
                                 comments = len(com_data)
                                 for comment in com_data:
-                                    comment['in_reply_to'] = post_id
+                                    comment['parent'] = post_id
                                     comment['link'] = link + comment['link']
                                     self._comments[user].append(comment)
                             else:
-                                comments = 0
+                                comments = None
 
                             posts.append({
                                 'date':postdate,

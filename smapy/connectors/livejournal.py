@@ -212,7 +212,7 @@ class LiveJournalConnector(BaseConnector):
                     'link':link,
                     'text':strip_spaces(strip_tags(text)),
                     'date':datetime.datetime.fromtimestamp(int(element['ctime_ts'])),
-                    'in_reply_to':reply_to,
+                    'parent':reply_to,
                     'author_id':author_id
                     }
 
@@ -273,7 +273,7 @@ class LiveJournalConnector(BaseConnector):
                     'link':link,
                     'text':strip_spaces(strip_tags(text)),
                     'date':data,
-                    'in_reply_to':reply_to,
+                    'parent':reply_to,
                     'author_id':author_id
                     }
         return comments

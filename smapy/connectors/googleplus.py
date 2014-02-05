@@ -151,7 +151,7 @@ class GooglePlusConnector(BaseConnector):
                                 'id':element['id'],
                                 'link':post['link'],
                                 'date':datetime.datetime.strptime(element['published'][:19], '%Y-%m-%dT%H:%M:%S') + datetime.timedelta(seconds=TIME_OFFSET),
-                                'in_reply_to':post['id'],
+                                'parent':post['id'],
                                 'author_id':element['actor']['id'],
                                 'text':strip_tags(element['object']['content'])
                                 })

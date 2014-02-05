@@ -146,7 +146,7 @@ class VKontakteConnector(BaseConnector):
                             comments.append({'id':'{}_{}'.format(uid, comment['cid']),
                                              'link':'http://www.vk.com/wall{0}_{1}'.format(uid,comment['cid']),
                                              'date':datetime.datetime.fromtimestamp(int(comment['date'])),
-                                             'in_reply_to':post['id'],
+                                             'parent':post['id'],
                                              'author_id':comment['uid'],
                                              'text':strip_spaces(strip_tags(comment['text']))
                                              })

@@ -147,7 +147,7 @@ class YouTubeConnector(BaseConnector):
                             comments.append({'id':comment['id']['$t'].split('/')[-1],
                                              'link':'http://www.youtube.com/all_comments?v={}&lc={}'.format(post['id'], comment['id']['$t'].split('/')[-1]),
                                              'date':datetime.datetime.strptime(comment['published']['$t'][:19], '%Y-%m-%dT%H:%M:%S') + datetime.timedelta(seconds=TIME_OFFSET),
-                                             'in_reply_to':comment['yt$videoid']['$t'],
+                                             'parent':comment['yt$videoid']['$t'],
                                              'author_id':comment['author'][0]['uri']['$t'].split('/')[-1],
                                              'text':strip_spaces(strip_tags(comment['content']['$t']))
                                              })
