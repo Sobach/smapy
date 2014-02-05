@@ -18,6 +18,10 @@ class GooglePlusConnector(BaseConnector):
     name = u'Google+'
 
     def _token_checker(self):
+        if not isinstance(self.token, (str, unicode)):
+            logging.critical(u'GP: Access token is not valid.')
+            self._token_ok = False
+            return False
         url = 'https://www.googleapis.com/plus/v1/people?query=google&key={}'.format(self.token)
         info = get_json(url, get = True)
         if not info or 'error' in info:

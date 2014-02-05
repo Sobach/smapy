@@ -17,6 +17,10 @@ class FacebookConnector(BaseConnector):
     name = u'Facebook'
 
     def _token_checker(self):
+        if not isinstance(self.token, (str, unicode)):
+            logging.critical(u'FB: Access token is not valid.')
+            self._token_ok = False
+            return False
         url = 'https://graph.facebook.com/me?access_token={}'.format(self.token)
         info = get_url(url, get = True, log_activity = False)
         if info:
@@ -29,6 +33,7 @@ class FacebookConnector(BaseConnector):
             self._token_ok = True
             return True
         logging.critical(u'FB: Access token is not valid.')
+        self._token_ok = False
         return False
 
     @need_token

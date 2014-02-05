@@ -20,15 +20,17 @@ class TwitterConnector(BaseConnector):
     network = u'tw'
     name = u'Twitter'
 
-    def __init__(self, **kargv):
-        self.network = u'tw'
-        BaseConnector.__init__(self, **kargv)
-
     def _token_checker(self):
+        if not isinstance(self.token, dict) or\
+        set(['consumer_key','consumer_secret','access_token','access_secret']).difference(set(self.token.keys())):
+            logging.critical(u'TW: Access token is not valid.')
+            self._token_ok = False
+            return False
         method = 'account/verify_credentials'
         answer = self.__api_request__(method, {})
         if not answer:
             logging.critical(u'TW: Access token is not valid.')
+            self._token_ok = False
             return False
         self._token_ok = True
         return True

@@ -15,6 +15,11 @@ class OdnoklassnikiConnector(BaseConnector):
     name = u'Одноклассники'
 
     def _token_checker(self):
+        if not isinstance(self.token, dict) or\
+        set(['app_key', 'app_secret', 'access_token']).difference(set(self.token.keys())):
+            logging.critical(u'OK: Access token is not valid.')
+            self._token_ok = False
+            return False
         data = self.__api_request__('friends.get')
         if not data or (isinstance(data, dict) and 'error_code' in data.keys()):
             logging.critical(u'OK: Access token is not valid.')

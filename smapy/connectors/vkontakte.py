@@ -17,6 +17,10 @@ class VKontakteConnector(BaseConnector):
     name = u'ВКонтакте'
 
     def _token_checker(self):
+        if not isinstance(self.token, (str, unicode)):
+            logging.critical(u'VK: Access token is not valid.')
+            self._token_ok = False
+            return False
         url = 'https://api.vk.com/method/isAppUser'
         params = {'access_token':self.token}
         response = self.__api_request__(url, params)

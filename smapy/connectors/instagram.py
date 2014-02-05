@@ -15,6 +15,10 @@ class InstagramConnector(BaseConnector):
     name = u'Instagram'
 
     def _token_checker(self):
+        if not isinstance(self.token, (str, unicode)):
+            logging.critical(u'IG: Access token is not valid.')
+            self._token_ok = False
+            return False
         url = 'https://api.instagram.com/v1/users/self?access_token={}'.format(self.token)
         info = get_json(url, log_activity = False, get = True)
         if not info:
