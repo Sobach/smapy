@@ -24,6 +24,7 @@ setup(name='smapy',
       packages=['smapy', 'smapy.connectors'],
       install_requires=[
           'beautifulsoup4',
+          'html5lib',
           'jinja2',
       ],
       zip_safe=False)
